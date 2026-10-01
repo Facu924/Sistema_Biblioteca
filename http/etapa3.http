@@ -1,0 +1,92 @@
+### Pruebas de la etapa 3 (IntelliJ: clic en el triángulo verde de cada bloque)
+### Reemplazá los datos de ejemplo. No subas contraseñas reales al repositorio.
+### Ejecutá primero el login: la cookie de sesión se reutiliza en los demás pedidos.
+
+### 1) Login como administrador
+POST http://localhost:8080/api/login
+Content-Type: application/x-www-form-urlencoded
+
+mail=TU_ADMIN_MAIL&clave=TU_ADMIN_CLAVE
+
+### 2) Alta de una bibliotecaria
+POST http://localhost:8080/api/usuarios
+Content-Type: application/json
+
+{
+  "nombre": "María",
+  "apellido": "Gómez",
+  "telefono": "3624000000",
+  "legajo": "B-001",
+  "mail": "biblio@cent35.edu.ar",
+  "contrasena": "ClaveDePrueba1",
+  "tipoUsuario": "ROLE_BIBLIOTECARIA"
+}
+
+### 3) Alta de un alumno (lector con carrera)
+POST http://localhost:8080/api/usuarios
+Content-Type: application/json
+
+{
+  "nombre": "Juan",
+  "apellido": "Pérez",
+  "legajo": "A-1001",
+  "mail": "juan@cent35.edu.ar",
+  "contrasena": "ClaveDePrueba1",
+  "tipoUsuario": "ROLE_LECTOR",
+  "tipoLector": "ALUMNO",
+  "perfilInstitucional": "Tecnicatura en Programación"
+}
+
+### 4) Alta de un profesor (se guarda como DOCENTE)
+POST http://localhost:8080/api/usuarios
+Content-Type: application/json
+
+{
+  "nombre": "Laura",
+  "apellido": "Díaz",
+  "legajo": "P-2001",
+  "mail": "laura@cent35.edu.ar",
+  "contrasena": "ClaveDePrueba1",
+  "tipoUsuario": "ROLE_LECTOR",
+  "tipoLector": "PROFESOR"
+}
+
+### 5) Listado con filtros (todos son opcionales)
+GET http://localhost:8080/api/usuarios?texto=perez&rol=ROLE_LECTOR&activo=true&pagina=0&tamanio=20
+
+### 6) Ver un usuario
+GET http://localhost:8080/api/usuarios/2
+
+### 7) Editar un usuario
+PUT http://localhost:8080/api/usuarios/2
+Content-Type: application/json
+
+{
+  "nombre": "María",
+  "apellido": "Gómez",
+  "telefono": "3624111111",
+  "legajo": "B-001",
+  "mail": "biblio@cent35.edu.ar",
+  "tipoUsuario": "ROLE_BIBLIOTECARIA"
+}
+
+### 8) Baja lógica
+POST http://localhost:8080/api/usuarios/3/baja
+
+### 9) Reactivar
+POST http://localhost:8080/api/usuarios/3/reactivar
+
+### 10) Desbloquear con contraseña temporal
+POST http://localhost:8080/api/usuarios/3/desbloquear?claveTemporal=true
+
+### 11) Mi perfil
+GET http://localhost:8080/api/perfil
+
+### 12) Cambiar mi contraseña
+PUT http://localhost:8080/api/perfil/contrasena
+Content-Type: application/json
+
+{
+  "contrasenaActual": "TU_ADMIN_CLAVE",
+  "contrasenaNueva": "OtraClaveNueva1"
+}
