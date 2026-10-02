@@ -2,6 +2,8 @@ package ar.edu.cent35.biblioteca.repository;
 
 import ar.edu.cent35.biblioteca.model.acceso.Usuario;
 import ar.edu.cent35.biblioteca.model.enums.TipoUsuario;
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +18,10 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     boolean existsByMail(String mail);
 
     boolean existsByTipoUsuario(TipoUsuario tipoUsuario);
+
+    Optional<Usuario> findByPersona_IdPersona(Long idPersona);
+
+    List<Usuario> findByPersona_IdPersonaIn(Collection<Long> idsPersona);
 
     /**
      * Listado con filtros opcionales (null = sin filtrar). El texto busca en nombre, apellido,

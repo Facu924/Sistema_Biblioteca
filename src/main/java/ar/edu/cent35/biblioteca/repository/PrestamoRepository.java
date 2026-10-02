@@ -1,22 +1,84 @@
 package ar.edu.cent35.biblioteca.repository;
 
 import ar.edu.cent35.biblioteca.model.circulacion.Prestamo;
-import ar.edu.cent35.biblioteca.model.enums.*;
+import ar.edu.cent35.biblioteca.model.enums.EstadoPrestamo;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface PrestamoRepository extends JpaRepository<Prestamo, Long> {
 
-    List<Prestamo> findByLector_IdLector(Long idLector);
-
-    /** Para el límite de 2 préstamos simultáneos: contar con estados ACTIVO y VENCIDO. */
+    /** Para el límite de préstamos simultáneos: contar con estados ACTIVO y VENCIDO. */
     long countByLector_IdLectorAndEstadoPrestamoIn(Long idLector, Collection<EstadoPrestamo> estados);
 
-    Optional<Prestamo> findByEjemplar_IdEjemplarAndEstadoPrestamoIn(Long idEjemplar, Collection<EstadoPrestamo> estados);
+    /** El préstamo abierto (ACTIVO o VENCIDO) de un ejemplar, por su número de inventario. */
+    @Query("""
+            select p from Prestamo p join fetch p.ejemplar e join fetch e.libro
+              join fetch p.lector l join fetch l.persona
+            where e.numeroInventario = :numero and p.estadoPrestamo in :estados
+            """)
+    Optional<Prestamo> findAbiertoPorInventario(@Param("numero") String numero,
+                                                @Param("estados") Collection<EstadoPrestamo> estados);
 
-    /** Para marcar préstamos vencidos. */
-    List<Prestamo> findByEstadoPrestamoAndFechaLimiteEntregaBefore(EstadoPrestamo estado, LocalDate fecha);
+    /** Préstamos abiertos cuya fecha límite ya pasó (mora), calculado por fecha y no por el estado guardado. */
+    @Query("""
+            select count(p) from Prestamo p
+            where p.lector.idLector = :idLector and p.estadoPrestamo in :estados
+              and p.fechaLimiteEntrega < :hoy
+            """)
+    long contarEnMora(@Param("idLector") Long idLector,
+                      @Param("estados") Collection<EstadoPrestamo> estados,
+                      @Param("hoy") LocalDate hoy);
+
+    @Query("""
+            select p from Prestamo p join fetch p.ejemplar e join fetch e.libro
+              join fetch p.lector l join fetch l.persona
+            where l.idLector = :idLector
+            order by p.fechaPrestamo desc
+            """)
+    List<Prestamo> findDelLector(@Param("idLector") Long idLector);
+
+    @Query("""
+            select p from Prestamo p join fetch p.ejemplar e join fetch e.libro
+              join fetch p.lector l join fetch l.persona
+            where p.estadoPrestamo in :estados and p.fechaLimiteEntrega < :hoy
+            order by p.fechaLimiteEntrega asc
+            """)
+    List<Prestamo> findEnMora(@Param("estados") Collection<EstadoPrestamo> estados,
+                              @Param("hoy") LocalDate hoy);
+
+    @Query(value = """
+            select p from Prestamo p join fetch p.ejemplar e join fetch e.libro
+              join fetch p.lector l join fetch l.persona pe
+            where (:estado is null or p.estadoPrestamo = :estado)
+              and pe.legajo like concat('%', :legajo, '%')
+            order by p.fechaPrestamo desc
+            """,
+            countQuery = """
+            select count(p) from Prestamo p join p.lector l join l.persona pe
+            where (:estado is null or p.estadoPrestamo = :estado)
+              and pe.legajo like concat('%', :legajo, '%')
+            """)
+    Page<Prestamo> buscar(@Param("estado") EstadoPrestamo estado,
+                          @Param("legajo") String legajo,
+                          Pageable pageable);
+
+    /** Tarea diaria: los ACTIVO con fecha límite anterior a hoy pasan a VENCIDO. */
+    @Transactional
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query("""
+            update Prestamo p set p.estadoPrestamo = :nuevo
+            where p.estadoPrestamo = :actual and p.fechaLimiteEntrega < :hoy
+            """)
+    int marcarVencidos(@Param("actual") EstadoPrestamo actual,
+                       @Param("nuevo") EstadoPrestamo nuevo,
+                       @Param("hoy") LocalDate hoy);
 }

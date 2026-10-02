@@ -1,6 +1,7 @@
 package ar.edu.cent35.biblioteca.repository;
 
 import ar.edu.cent35.biblioteca.model.inventario.Libro;
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,6 +19,10 @@ public interface LibroRepository extends JpaRepository<Libro, Long> {
     boolean existsByEditorial_IdEditorial(Long idEditorial);
 
     boolean existsByMateria_IdMateria(Long idMateria);
+
+    /** Bloquea la fila del libro mientras dura la transacción: evita que dos préstamos simultáneos rompan el stock mínimo. */
+    @Query(value = "select * from libro where id_libro = :id for update", nativeQuery = true)
+    Optional<Libro> findByIdParaActualizar(@Param("id") Long id);
 
     /**
      * Búsqueda por título, autor, editorial o ISBN, con filtros opcionales (null = sin filtrar).

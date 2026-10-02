@@ -13,6 +13,10 @@ public interface EjemplarFisicoRepository extends JpaRepository<EjemplarFisico, 
 
     Optional<EjemplarFisico> findByNumeroInventario(String numeroInventario);
 
+    /** Con bloqueo de fila: evita prestar o devolver dos veces el mismo ejemplar a la vez. */
+    @Query(value = "select * from ejemplar_fisico where numero_inventario = :numero for update", nativeQuery = true)
+    Optional<EjemplarFisico> findByNumeroInventarioParaActualizar(@Param("numero") String numero);
+
     boolean existsByNumeroInventario(String numeroInventario);
 
     boolean existsByNumeroInventarioAndIdEjemplarNot(String numeroInventario, Long idEjemplar);
