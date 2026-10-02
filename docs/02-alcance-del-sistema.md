@@ -6,7 +6,7 @@ El alcance se divide y delimita en los siguientes módulos y capacidades funcion
 
 - **Gestión de Cuentas y Accesos:** Alta de usuarios con definición de roles estrictos (`ADMIN`, `BIBLIOTECARIO`, `USUARIO_GENERAL`) y perfiles institucionales diferenciados (carreras para alumnos, categoría "DOCENTE" para profesores, y perfil libre para el personal administrativo) (`HU-01`).
 - **Mantenimiento y Auditoría:** Capacidad de realizar bajas lógicas de usuarios para preservar la integridad histórica de los préstamos pasados (`HU-02`) y edición global de perfiles.
-- **Seguridad y Control de Acceso (NUEVO):** Monitoreo automático de intentos fallidos de inicio de sesión por parte del sistema, generando un bloqueo temporal de cuenta ante ataques de fuerza bruta (`HU-11`). Herramienta de desbloqueo, blanqueo de credenciales y restablecimiento de estado a cargo exclusivo del Administrador (`HU-03`).
+- **Seguridad y Control de Acceso (NUEVO):** Monitoreo automático de intentos fallidos de inicio de sesión por parte del sistema, generando el bloqueo de la cuenta ante ataques de fuerza bruta (el bloqueo se mantiene hasta que el Administrador la desbloquea) (`HU-11`). Herramienta de desbloqueo, blanqueo de credenciales y restablecimiento de estado a cargo exclusivo del Administrador (`HU-03`).
 
 ### 2. Módulo de Gestión Operativa de Préstamos (Bibliotecaria/o)
 
@@ -28,7 +28,7 @@ El alcance se divide y delimita en los siguientes módulos y capacidades funcion
 ### 4. Requerimientos Tecnológicos y No Funcionales del Sistema
 
 - **Arquitectura y Backend:** Desarrollado en Java con **Spring Boot**, estructurado en capas (Controladores, Servicios, Repositorios) y aplicando **Spring Data JPA / Hibernate** para aislar la lógica de negocio de las consultas nativas (`RNF-TEC-01`, `RNF-TEC-02`).
-- **Seguridad Web:** Implementación de **Spring Security** con control estricto de accesos por roles (**RBAC**) por cada petición HTTP y cifrado de contraseñas mediante **BCrypt** (`RNF-SEC-01`, `RNF-SEC-02`). Credenciales iniciales configuradas mediante variables de entorno (`RNF-SEC-03`).
+- **Seguridad Web:** Implementación de **Spring Security** (autenticación por sesión con cookie) con control estricto de accesos por roles (**RBAC**) por cada petición HTTP y cifrado de contraseñas mediante **BCrypt** (`RNF-SEC-01`, `RNF-SEC-02`). Credenciales iniciales configuradas mediante variables de entorno (`RNF-SEC-03`).
 - **Base de Datos e Integridad:** Motor **MySQL** utilizando restricciones de Clave Primaria, Foránea y Unicidad, con soporte para transacciones **ACID** (rollback automático ante fallos críticos en préstamos/devoluciones) y *collation* `utf8mb4_unicode_ci` para búsquedas sin sensibilidad a acentos (`RNF-REL-01`, `RNF-REL-02`). Los archivos pesados (PDFs) se almacenan en el sistema de archivos del servidor, guardando únicamente la ruta referencial en la base de datos (`RNF-TEC-02`).
 - **Rendimiento y Periféricos:** Tiempos de respuesta inferiores a los 2 segundos en red local, alta concurrencia para consultas masivas de alumnos sin bloquear las operaciones rápidas del mostrador, e integración de hardware con lectores de códigos de barras y diseño adaptado a tablets (`RNF-PERF-01`, `RNF-PERF-02`, `RNF-HW-01`).
 
@@ -43,3 +43,24 @@ Para garantizar la viabilidad y entrega en tiempo y forma del proyecto, quedan e
 - **Autenticación Externas / OAuth2:** El sistema no integrará servicios de autenticación de terceros (como Google Sign-In, LDAP institucional u Office 365), utilizando un esquema de autenticación propio gestionado mediante base de datos relacional y cifrado BCrypt.
 - **Gestión de Inventario Financiero o Compras:** El módulo de proveedores y compras de material bibliográfico queda excluido; el sistema solo administra el catálogo existente, altas de nuevos ejemplares y bajas por expurgo (`RF-BIB-01`, `RF-BIB-06`).
 - **Aplicación Móvil Nativa:** El desarrollo se limita estrictamente a una aplicación web responsiva adaptada para navegadores de escritorio y para las 10 tablets institucionales, sin contemplar el desarrollo de apps nativas para Android o iOS (`RNF-HW-01`).
+
+---
+
+### 6. Alcance incorporado durante el desarrollo
+
+Al implementar el sistema se definieron, junto con la bibliotecaria, comportamientos que los documentos originales no detallaban. Quedan incluidos en el alcance:
+
+- **Gestión del catálogo:** altas, bajas y modificaciones de autores, editoriales, materias CDU y libros, con búsqueda por título, autor, editorial o ISBN. El stock de cada libro (ejemplares totales y disponibles) se informa en tiempo real (`HU-14`).
+- **Gestión de ejemplares físicos:** alta con número de inventario, búsqueda por código de barras y cambios de estado (dañado, extraviado, baja lógica por expurgo) con motivo obligatorio (`HU-15`).
+- **Material digital:** carga, visualización y descarga de archivos PDF y EPUB, validados por su contenido (`HU-16`).
+- **Penalizaciones flexibles:** el sistema sugiere un día de penalización por cada día de atraso, pero la bibliotecaria decide si aplicarla, ajustarla o anularla; también puede cargar y levantar sanciones manuales (`HU-17`, `HU-18`).
+- **Mora y contacto:** listado de préstamos vencidos con teléfono y correo del lector (`HU-19`).
+- **Reservas con cola de espera:** solo se reserva cuando no hay ejemplares disponibles; se atienden por orden de llegada y se completan al prestar el material (`HU-20`).
+- **Autogestión del perfil:** cada usuario cambia su teléfono, correo y contraseña (`HU-21`), y consulta sus penalizaciones y reservas (`HU-22`).
+- **Auditoría:** registro de eventos críticos con usuario, acción e IP, e historial de devoluciones (`HU-23`).
+- **Gestión de usuarios:** listado con filtros y edición por el Administrador (`HU-24`).
+- **Mantenimiento automático diario:** marca los préstamos vencidos y desactiva las penalizaciones cumplidas.
+
+**Se mantienen fuera del alcance:** renovaciones de préstamos, límite de reservas por lector y las exclusiones de la sección 5.
+
+**Pendientes de implementación:** las dos aplicaciones cliente (gestión y autogestión) y la importación masiva desde Aguapey. El estado detallado de cada requisito está en [`00-estado-de-implementacion.md`](00-estado-de-implementacion.md) y las decisiones de diseño en [`07-decisiones-de-diseno.md`](07-decisiones-de-diseno.md).

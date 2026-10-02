@@ -5,8 +5,8 @@
 - **`Estado_Prestamo`**: `ACTIVO`, `DEVUELTO`, `VENCIDO`
 - **`Tipo_Prestamo`**: `AULA`, `SALA`, `DOMICILIO`
 - **`Estado_Reserva`**: `PENDIENTE`, `COMPLETADA`, `CANCELADA`
-- **`Estado_Ejemplar`**: `DISPONIBLE`, `PRESTADO`, `DAÑADO`, `EXTRAVIADO`, `BAJA_LOGICA`
-- **`Estado_Entrega`**: `DEVUELTO_OK`, `DEVUELTO_CON_DAÑO`, `PERDIDO`
+- **`Estado_Ejemplar`**: `DISPONIBLE`, `PRESTADO`, `DANADO`, `EXTRAVIADO`, `BAJA_LOGICA`
+- **`Estado_Entrega`**: `DEVUELTO_OK`, `DEVUELTO_CON_DANO`, `PERDIDO`
 
 ### Modelo de Entidades por Módulos
 
@@ -30,7 +30,8 @@
 - **`lector`** (Perfil institucional específico para quienes toman préstamos)
     - `id_lector` (Long, PK)
     - `id_persona` (Long, FK -> `persona`, Unique)
-    - `perfil_institucional` (String) — *Almacena la carrera (Alumno) o la categoría "DOCENTE" (Profesor)*
+    - `tipo_lector` (Enum: `Tipo_Lector`)
+    - `perfil_institucional` (String, Nullable) — *Almacena la carrera (Alumno) o la categoría "DOCENTE" (Profesor); queda vacío para el personal administrativo*
 
 #### 2. Módulo de Catálogo e Inventario (Formato Aguapey / MARC)
 
@@ -66,13 +67,14 @@
 
 #### 3. Módulo de Circulación, Préstamos y Sanciones
 
-- **`prestamo`** (Operación activa en mostrador)
+- **`prestamo`** (Operación de mostrador; tras la devolución se conserva con estado `DEVUELTO`)
     - `id_prestamo` (Long, PK)
     - `id_ejemplar` (Long, FK -> `ejemplar_fisico`)
     - `id_lector` (Long, FK -> `lector`)
     - `id_bibliotecaria` (Long, FK -> `usuario`) — *Operador que registró la salida*
     - `fecha_prestamo` (LocalDateTime)
     - `fecha_limite_entrega` (LocalDate)
+    - `fecha_devolucion_real` (LocalDateTime, Nullable) — *Se completa al devolver*
     - `tipo_prestamo` (Enum: `Tipo_Prestamo`)
     - `estado_prestamo` (Enum: `Estado_Prestamo`)
 - **`reserva`** (Colas de espera de materiales)
@@ -128,3 +130,25 @@
 - **`lector` y `penalizacion` (1 a N):** Un lector puede recibir diversas sanciones o penalizaciones a lo largo de su cursada debido a moras, retrasos o daños.
 - **`historial_transacciones` y `penalizacion` (1 a 0..1):** Una penalización puede estar opcionalmente asociada a una transacción específica del historial (por ejemplo, cuando una devolución tardía o con daño origina directamente la sanción).
 - **`usuario` y `auditoria_sistema` (1 a 0..N):** Un usuario (generalmente con rol de administrador) puede realizar múltiples acciones en el sistema que generan eventos de auditoría. Un registro de auditoría apunta a un usuario responsable, o bien puede quedar sin usuario asociado si el evento fue disparado de manera automática por el sistema.
+
+---
+
+### Notas de implementación
+
+**Cambios respecto al modelo original**
+
+- Los valores de enum no llevan eñe (`DANADO`, `DEVUELTO_CON_DANO`) para evitar problemas de codificación en Windows.
+- `lector` tiene el campo `tipo_lector`, que resuelve la diferencia entre el enum `Tipo_Lector` y `perfil_institucional`.
+- `prestamo` tiene el campo `fecha_devolucion_real`. Así, los préstamos devueltos siguen apareciendo en el listado del lector con su fecha de devolución y su atraso, sin consultar otra tabla.
+
+**Préstamo e historial.** Al devolver, el préstamo no se borra: pasa a `DEVUELTO`. Además se crea un registro en `historial_transacciones` con el estado de entrega y las observaciones. `Estado_Prestamo` significa: `ACTIVO` y `VENCIDO` (todavía no volvió, ambos cuentan para el límite de 2) y `DEVUELTO`.
+
+**Restricciones de unicidad:** `persona.legajo`, `usuario.mail`, `usuario.id_persona`, `lector.id_persona` y `ejemplar_fisico.numero_inventario`.
+
+**Penalizaciones.** Una penalización está *vigente* si `activa` es verdadero y `fecha_fin` es nula o no es anterior a hoy. Al levantarla se pone `activa` en falso y se registra `fecha_fin`. La tarea diaria desactiva las que ya cumplieron su plazo. `id_historial` queda nulo en las sanciones manuales.
+
+**Libros digitales.** `es_digital` es verdadero mientras el libro tenga archivo. `ruta_archivo_digital` guarda solo el nombre del archivo; la carpeta se define con `app.storage.path`.
+
+**Datos normalizados.** Los correos se guardan en minúsculas y sin espacios. Las contraseñas se guardan con BCrypt.
+
+**Acciones registradas en `auditoria_sistema`:** `ALTA_USUARIO`, `EDICION_USUARIO`, `BAJA_LOGICA_USUARIO`, `REACTIVACION_USUARIO`, `BLOQUEO_AUTOMATICO`, `DESBLOQUEO_CUENTA`, `CAMBIO_MAIL`, `CAMBIO_CONTRASENA`, `BAJA_LIBRO`, `CAMBIO_ESTADO_EJEMPLAR`, `PENALIZACION_CREADA` y `PENALIZACION_LEVANTADA`. En `BLOQUEO_AUTOMATICO`, `id_usuario` queda nulo porque lo dispara el sistema.
