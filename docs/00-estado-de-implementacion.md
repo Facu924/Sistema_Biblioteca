@@ -43,8 +43,8 @@ Las historias `HU-01` a `HU-13` (documento original) y `HU-14` a `HU-24` (incorp
 
 ## Pendientes
 
-1. **Aplicación de gestión** (bibliotecaria y administrador): mostrador, préstamos, devoluciones, catálogo y usuarios.
-2. **Aplicación de autogestión** (alumnos y profesores): búsqueda, visualización de PDF y EPUB, reservas e historial.
+1. **Aplicación de gestión** (bibliotecaria y administrador). Conectados con la API: ingreso, panel principal, catálogo y préstamos (con devoluciones). **Pendientes:** historial, usuarios y perfil, que todavía no tienen diseño.
+2. **Aplicación de autogestión** (alumnos y profesores). Existe el diseño de la pantalla de inicio con datos de ejemplo. **Pendiente:** conectarla (búsqueda, PDF y EPUB, reservas) y diseñar «Mis préstamos e historial» y «Mis reservas».
 3. **Importación masiva desde Aguapey.** Requiere un archivo de ejemplo del formato real.
 4. **Pruebas automatizadas.** La dependencia de Playwright ya está en `build.gradle`, pero todavía no hay pruebas escritas. Hasta ahora todo se verificó a mano con las colecciones de Postman.
 5. **Medición de rendimiento** (`RNF-PERF-01` y `RNF-PERF-02`).

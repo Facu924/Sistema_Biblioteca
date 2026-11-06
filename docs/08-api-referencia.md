@@ -8,6 +8,7 @@ Todas las rutas empiezan con `/api`. Salvo el login, **requieren sesión iniciad
 
 | Abreviatura | Significa |
 |---|---|
+| Público | Cualquiera, sin iniciar sesión |
 | Todos | Cualquier usuario con sesión |
 | Lector | `ROLE_LECTOR` |
 | Biblio | `ROLE_BIBLIOTECARIA` |
@@ -25,6 +26,7 @@ Los listados paginados reciben `pagina` (desde 0) y `tamanio` (máximo 100) y de
 | `POST /login` | Público | Formulario con `mail` y `clave`. `200`, `401`, `403` o `423`. |
 | `POST /logout` | Todos | Cierra la sesión. |
 | `GET /me` | Todos | Devuelve el correo y el rol de quien tiene la sesión. |
+| `GET /publico/resumen` | Público | Cantidad de libros, ejemplares disponibles y libros digitales. Se muestra en la pantalla de ingreso. |
 
 ## Usuarios
 
@@ -71,14 +73,14 @@ Autores (`/autores`), editoriales (`/editoriales`) y materias CDU (`/materias`) 
 | `PUT /autores/{id}` | Biblio | Modificación. |
 | `DELETE /autores/{id}` | Biblio | Baja. `409` si tiene libros. |
 
-Los cuerpos son `{"nombreEditorial": "..."}` para editoriales y `{"codigoCdu": "821.134", "nombreTema": "..."}` para materias.
+`GET /materias` (el listado) también es público. Los cuerpos son `{"nombreEditorial": "..."}` para editoriales y `{"codigoCdu": "821.134", "nombreTema": "..."}` para materias.
 
 ## Libros y ejemplares
 
 | Método y ruta | Quién | Descripción |
 |---|---|---|
-| `GET /libros` | Todos | Búsqueda. Filtros: `texto`, `idAutor`, `idEditorial`, `idMateria`, `soloDigitales`. Cada libro informa `ejemplaresTotal`, `ejemplaresDisponibles` y `prestamoDomicilioHabilitado`. |
-| `GET /libros/{id}` | Todos | Detalle con stock. |
+| `GET /libros` | Público | Búsqueda. Filtros: `texto`, `idAutor`, `idEditorial`, `idMateria`, `soloDigitales`. Cada libro informa `ejemplaresTotal`, `ejemplaresDisponibles` y `prestamoDomicilioHabilitado`. |
+| `GET /libros/{id}` | Público | Detalle con stock. |
 | `POST /libros` | Biblio | Alta. |
 | `PUT /libros/{id}` | Biblio | Modificación. |
 | `DELETE /libros/{id}` | Biblio | Baja. `409` si tiene ejemplares. |
@@ -117,7 +119,9 @@ Ejemplo de alta de un libro:
 | Método y ruta | Quién | Descripción |
 |---|---|---|
 | `POST /prestamos` | Biblio | Registra un préstamo. |
-| `GET /prestamos` | Personal | Listado. Filtros: `estado` (`ACTIVO`, `VENCIDO`, `DEVUELTO`) y `legajo`. |
+| `GET /prestamos` | Personal | Listado. Filtros: `estado` (`ACTIVO`, `VENCIDO`, `DEVUELTO`) y `texto`, que busca por nombre del lector, legajo, título, ISBN o número de inventario. |
+| `GET /prestamos/resumen` | Personal | Cantidad de préstamos activos, devueltos y vencidos. |
+| `GET /lectores?legajo=` | Personal | Ficha del lector con su estado: si hoy se le puede prestar y, si no, el motivo. Se usa en el mostrador antes de prestar. |
 | `GET /prestamos/vencidos` | Personal | Préstamos en mora, con teléfono y correo del lector. |
 | `GET /prestamos/inventario/{numero}` | Personal | Préstamo abierto de un ejemplar, con los días de atraso. |
 | `GET /prestamos/mios` | Lector | Préstamos propios, activos, devueltos y vencidos. |
@@ -161,6 +165,13 @@ Registrar una devolución:
 | Método y ruta | Quién | Descripción |
 |---|---|---|
 | `POST /reservas` | Lector | Reserva un libro. Cuerpo: `{"idLibro": 1}`. |
+| `GET /reservas` | Personal | Listado general, en orden de llegada. Filtro: `estado` (`PENDIENTE`, `COMPLETADA`, `CANCELADA`). |
 | `GET /reservas/mias` | Lector | Reservas propias, con la posición en la cola. |
 | `GET /reservas/libro/{idLibro}` | Personal | Cola de espera del libro, en orden de atención. |
 | `POST /reservas/{id}/cancelar` | Lector o Biblio | Cancela una reserva pendiente. El lector solo las propias. |
+
+## Panel principal
+
+| Método y ruta | Quién | Descripción |
+|---|---|---|
+| `GET /dashboard` | Personal | Indicadores y datos de los gráficos: ejemplares y libros, préstamos abiertos, de hoy y vencidos, tasa de devolución a tiempo, lectores morosos, cuentas bloqueadas, reservas pendientes, penalizaciones vigentes, préstamos y devoluciones de los últimos 6 meses, los 5 libros más prestados de los últimos 30 días, títulos por categoría y los últimos 8 movimientos. |

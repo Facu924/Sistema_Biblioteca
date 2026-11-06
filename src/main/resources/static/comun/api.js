@@ -27,7 +27,7 @@
     }
 
     async function pedir(metodo, url, opciones) {
-        const { cuerpo, formulario, parametros, sinRedireccion } = opciones || {};
+        const { cuerpo, formulario, parametros, sinRedireccion, formData } = opciones || {};
         const config = { method: metodo, headers: {}, credentials: 'same-origin' };
 
         if (cuerpo !== undefined) {
@@ -37,6 +37,10 @@
         if (formulario) {
             config.headers['Content-Type'] = 'application/x-www-form-urlencoded';
             config.body = new URLSearchParams(formulario).toString();
+        }
+
+        if (formData) {
+            config.body = formData; // el navegador completa el Content-Type con el separador
         }
 
         let consulta = '';
@@ -78,6 +82,7 @@
         post: (url, cuerpo, opciones) => pedir('POST', url, { cuerpo, ...(opciones || {}) }),
         put: (url, cuerpo, opciones) => pedir('PUT', url, { cuerpo, ...(opciones || {}) }),
         eliminar: (url, opciones) => pedir('DELETE', url, opciones),
+        subir: (url, formData) => pedir('POST', url, { formData }),
         login: (mail, clave) => pedir('POST', '/api/login', { formulario: { mail, clave }, sinRedireccion: true })
     };
 
@@ -206,6 +211,20 @@
                     document.querySelectorAll('.ui-overlay.abierto').forEach(ov => Ui.cerrar(ov.id));
                 }
             });
+        },
+
+        /** Campana de la barra superior: muestra los préstamos vencidos y lleva a esa lista. */
+        async campana(rutaPrestamos) {
+            const badge = document.getElementById('badgeMora');
+            const boton = document.querySelector('.notif-btn');
+            if (!badge || !boton) return;
+            try {
+                const r = await pedir('GET', '/api/prestamos/resumen');
+                badge.textContent = r.vencidos;
+                badge.hidden = r.vencidos === 0;
+            } catch (e) { /* sin número */ }
+            boton.title = 'Préstamos vencidos';
+            boton.addEventListener('click', () => { window.location.href = rutaPrestamos + '?estado=VENCIDO'; });
         },
 
         /** 2026-05-20T10:15:00 -> 2026-05-20 */

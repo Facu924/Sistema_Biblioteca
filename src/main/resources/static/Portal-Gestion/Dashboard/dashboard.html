@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Biblioteca CENT 35 - Dashboard Avanzado</title>
     <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="../../comun/ui.css">
     <!-- Librería de Gráficos -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
@@ -80,12 +81,12 @@
                         <span class="search-icon">
                             <i class="ph ph-magnifying-glass"></i>
                         </span>
-                        <input type="text" placeholder="Buscar libro, lector o DNI...">
+                        <input type="text" id="buscarGlobal" placeholder="Buscar libro, autor o ISBN..." autocomplete="off">
                     </div>
                     
-                    <button class="notif-btn" title="Notificaciones de mora y reservas">
+                    <button class="notif-btn" title="Préstamos vencidos">
                         <i class="ph ph-bell"></i>
-                        <span class="badge">4</span>
+                        <span class="badge" id="badgeMora" hidden>0</span>
                     </button>
 
                     <div class="user-profile">
@@ -108,9 +109,9 @@
                             <div class="kpi-icon blue">
                                 <i class="ph ph-books"></i>
                             </div>
-                            <span class="trend positive">↗ 1,321 dispon.</span>
+                            <span class="trend positive" id="kpiCatalogoTrend">–</span>
                         </div>
-                        <div class="kpi-value">1,842</div>
+                        <div class="kpi-value" id="kpiCatalogo">–</div>
                         <div class="kpi-label">Total en Catálogo</div>
                     </div>
 
@@ -119,9 +120,9 @@
                             <div class="kpi-icon orange">
                                 <i class="ph ph-file-text"></i>
                             </div>
-                            <span class="trend positive">↗ 8.4%</span>
+                            <span class="trend positive" id="kpiPrestamosTrend">–</span>
                         </div>
-                        <div class="kpi-value">127</div>
+                        <div class="kpi-value" id="kpiPrestamos">–</div>
                         <div class="kpi-label">Préstamos Activos</div>
                     </div>
 
@@ -130,20 +131,20 @@
                             <div class="kpi-icon green">
                                 <i class="ph ph-check-circle"></i>
                             </div>
-                            <span class="trend positive">91.2% a tiempo</span>
+                            <span class="trend positive" id="kpiTasaTrend">–</span>
                         </div>
-                        <div class="kpi-value">91%</div>
+                        <div class="kpi-value" id="kpiTasa">–</div>
                         <div class="kpi-label">Tasa de Devolución</div>
                     </div>
 
-                    <div class="kpi-card danger-card">
+                    <div class="kpi-card danger-card" id="kpiMoraCard">
                         <div class="kpi-top">
                             <div class="kpi-icon red">
                                 <i class="ph ph-warning"></i>
                             </div>
                             <span class="trend negative">Requiere acción</span>
                         </div>
-                        <div class="kpi-value">14</div>
+                        <div class="kpi-value" id="kpiMora">–</div>
                         <div class="kpi-label">Morosos / Bloqueados</div>
                     </div>
                 </section>
@@ -155,9 +156,9 @@
                         <div class="card-header">
                             <div>
                                 <h3>Flujo Mensual de Préstamos</h3>
-                                <p class="subtitle">Comparativa del año 2026</p>
+                                <p class="subtitle">Préstamos y devoluciones de los últimos 6 meses</p>
                             </div>
-                            <span class="badge-pill">+18% vs año anterior</span>
+                            <span class="badge-pill" id="flujoBadge" hidden></span>
                         </div>
                         <div class="chart-container">
                             <canvas id="chartPrestamos"></canvas>
@@ -169,7 +170,7 @@
                         <div class="card-header">
                             <div>
                                 <h3>Top 5 Libros Más Demandados</h3>
-                                <p class="subtitle">Ranking de solicitudes del mes</p>
+                                <p class="subtitle">Ranking de préstamos de los últimos 30 días</p>
                             </div>
                         </div>
                         <div class="chart-container">
@@ -195,55 +196,7 @@
                         <div class="card-header">
                             <h3>Actividad Reciente</h3>
                         </div>
-                        <ul class="activity-list">
-                            <li class="activity-item">
-                                <div class="item-avatar blue">AG</div>
-                                <div class="item-info">
-                                    <h4>Ana García</h4>
-                                    <p>Cálculo Diferencial - Stewart</p>
-                                </div>
-                                <div class="item-status">
-                                    <span class="status-tag prestamo">Préstamo</span>
-                                    <span class="time-text">hace 10 min</span>
-                                </div>
-                            </li>
-
-                            <li class="activity-item">
-                                <div class="item-avatar light-blue">CR</div>
-                                <div class="item-info">
-                                    <h4>Carlos Ruiz</h4>
-                                    <p>Física Universitaria - Young</p>
-                                </div>
-                                <div class="item-status">
-                                    <span class="status-tag devolucion">Devolución</span>
-                                    <span class="time-text">hace 35 min</span>
-                                </div>
-                            </li>
-
-                            <li class="activity-item">
-                                <div class="item-avatar red-avatar">DS</div>
-                                <div class="item-info">
-                                    <h4>Diego Sosa</h4>
-                                    <p>Química General - Chang</p>
-                                </div>
-                                <div class="item-status">
-                                    <span class="status-tag vence">Vence hoy</span>
-                                    <span class="time-text">hace 2h</span>
-                                </div>
-                            </li>
-
-                            <li class="activity-item">
-                                <div class="item-avatar blue">LV</div>
-                                <div class="item-info">
-                                    <h4>Laura Vega</h4>
-                                    <p>Historia Argentina - Luna</p>
-                                </div>
-                                <div class="item-status">
-                                    <span class="status-tag devolucion">Devolución</span>
-                                    <span class="time-text">hace 3h</span>
-                                </div>
-                            </li>
-                        </ul>
+                        <ul class="activity-list" id="listaActividad"></ul>
                     </div>
 
                     <!-- Panel de Accesos Rápidos y Alertas -->
@@ -252,29 +205,29 @@
                             <h3>Gestión Rápida</h3>
                         </div>
                         <div class="quick-actions-list">
-                            <button class="quick-btn primary-btn">
+                            <button class="quick-btn primary-btn" type="button" id="btnNuevoPrestamo" data-solo="ROLE_BIBLIOTECARIA">
                                 <span class="btn-icon">
                                     <i class="ph ph-plus"></i>
                                 </span>
                                 <span>Nuevo Préstamo / Escáner</span>
                             </button>
-                            <button class="quick-btn">
+                            <button class="quick-btn" type="button" id="btnDevolucion" data-solo="ROLE_BIBLIOTECARIA">
                                 <span class="btn-icon">
                                     <i class="ph ph-arrow-down-tray"></i>
                                 </span>
                                 <span>Registrar Devolución</span>
                             </button>
-                            <button class="quick-btn warning-btn">
+                            <button class="quick-btn warning-btn" type="button" id="btnReservas">
                                 <span class="btn-icon">
                                     <i class="ph ph-pin"></i>
                                 </span>
-                                <span>Reservas Pendientes (3)</span>
+                                <span id="txtReservas">Reservas Pendientes</span>
                             </button>
-                            <button class="quick-btn alert-btn">
+                            <button class="quick-btn alert-btn" type="button" id="btnDesbloqueos" data-solo="ROLE_ADMIN">
                                 <span class="btn-icon">
                                     <i class="ph ph-unlock"></i>
                                 </span>
-                                <span>Desbloquear Usuarios (2)</span>
+                                <span id="txtDesbloqueos">Desbloquear Usuarios</span>
                             </button>
                         </div>
                     </div>
@@ -287,9 +240,34 @@
     
     </script>       
 
-    <script src="dashboard.js"></script>
-    <!-- Sesión: usuario conectado, rol y cierre de sesión -->
+    <!-- MODAL: RESERVAS PENDIENTES -->
+    <div class="ui-overlay" id="modalReservas" aria-hidden="true">
+        <div class="ui-modal ancho" role="dialog" aria-labelledby="tituloReservas">
+            <header>
+                <h3 id="tituloReservas">Reservas pendientes</h3>
+                <button type="button" class="ui-cerrar" data-cerrar aria-label="Cerrar">&times;</button>
+            </header>
+            <div class="ui-cuerpo" id="cuerpoReservas"></div>
+            <div class="ui-pie"><button type="button" class="ui-btn secundario" data-cerrar>Cerrar</button></div>
+        </div>
+    </div>
+
+    <!-- MODAL: USUARIOS BLOQUEADOS -->
+    <div class="ui-overlay" id="modalBloqueados" aria-hidden="true">
+        <div class="ui-modal ancho" role="dialog" aria-labelledby="tituloBloqueados">
+            <header>
+                <h3 id="tituloBloqueados">Usuarios bloqueados</h3>
+                <button type="button" class="ui-cerrar" data-cerrar aria-label="Cerrar">&times;</button>
+            </header>
+            <div class="ui-cuerpo">
+                <div id="avisoBloqueados"></div>
+                <div id="listaBloqueados"></div>
+            </div>
+            <div class="ui-pie"><button type="button" class="ui-btn secundario" data-cerrar>Cerrar</button></div>
+        </div>
+    </div>
+
     <script src="../../comun/api.js"></script>
-    <script>Sesion.requerir(['ROLE_BIBLIOTECARIA', 'ROLE_ADMIN']);</script>
+    <script src="dashboard.js"></script>
 </body>
 </html>

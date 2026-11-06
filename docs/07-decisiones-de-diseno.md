@@ -71,6 +71,29 @@ Se definieron con la bibliotecaria, que explicó que las sanciones no siempre se
 
 **Búsqueda.** Se hace con `LIKE` sobre título, autor, editorial e ISBN. Ignora mayúsculas y acentos porque la base se crea con collation `utf8mb4_unicode_ci`.
 
+## Pantallas (front)
+
+- **Se sirven desde el mismo servidor que la API**, desde `src/main/resources/static`. La dirección y el puerto son los mismos, por lo que la cookie de sesión funciona sola y no hace falta configurar CORS. Al abrir `http://localhost:8080` se muestra el ingreso.
+- **Las pantallas son públicas, los datos no.** Cualquiera puede abrir un HTML, pero cada pantalla verifica la sesión y su rol al cargar y, si no corresponde, redirige. Lo que realmente protege la información es la API.
+- **El catálogo se puede consultar sin iniciar sesión** (`GET /api/libros`, el detalle y las materias), como indica el alcance ("consulta pública"). Los **archivos digitales** y los **ejemplares** siguen exigiendo sesión.
+- **El ingreso es con el correo electrónico**, que es el usuario del sistema. Después se redirige según el rol: el lector va al portal académico y el personal, al panel de gestión.
+- **Se quitaron los botones de acceso rápido de demostración** del login, que dejaban cuentas y contraseñas escritas en la página.
+- **Los tres números del panel de ingreso son reales** (libros, ejemplares disponibles y material digital). Los de usuarios activos y préstamos activos eran datos de ejemplo y no se pueden mostrar sin iniciar sesión.
+- **No hay botón de renovar** en préstamos: las renovaciones están fuera del alcance.
+- **El administrador ve las pantallas de gestión en solo lectura**, sin los botones para registrar préstamos ni devoluciones.
+- **La devolución se hace desde una ventana** que muestra los días de atraso y propone la penalización sugerida, que la bibliotecaria puede cambiar o anular. También se puede iniciar escaneando el inventario del libro que vuelve.
+- **Catálogo.** Las categorías del filtro salen de las materias CDU cargadas: hasta 8 se muestran como botones y, si hay más, como un desplegable. Al agregar un libro, el autor y la editorial se buscan por nombre y, si no existen, se crean al guardar (sin distinguir mayúsculas ni acentos). Después de agregar un libro se abre su detalle para cargar los ejemplares. En el detalle se cambia el estado de cada ejemplar y se sube, reemplaza o quita el archivo digital. El administrador solo consulta.
+- **Estado de un libro en el listado:** *Disponible* si hay algún ejemplar disponible, *Agotado* si todos están prestados o fuera de circulación, *Digital* si no tiene ejemplares pero sí archivo y *Sin ejemplares* en los demás casos.
+- **Panel principal: qué significa cada número.**
+  - *Total en catálogo*: ejemplares físicos sin contar las bajas (los títulos aparecen al pasar el mouse).
+  - *Préstamos activos*: los activos más los vencidos, es decir, todo lo que todavía no volvió.
+  - *Tasa de devolución*: porcentaje de devoluciones en fecha de los últimos 12 meses.
+  - *Morosos / bloqueados*: lectores con un préstamo vencido sin devolver, más cuentas bloqueadas.
+  - *Libros más pedidos*: ranking de los últimos 30 días.
+  - *Por categoría*: cantidad de títulos por materia CDU; las cinco mayores y el resto como «Otras».
+  - *Flujo mensual*: préstamos y devoluciones de los últimos 6 meses.
+- **Accesos del panel:** «Nuevo préstamo» y «Registrar devolución» abren esas ventanas en la pantalla de préstamos; la campana y la búsqueda llevan a los préstamos vencidos y al catálogo; «Reservas pendientes» lista la cola en orden de llegada (la bibliotecaria puede cancelar); y «Desbloquear usuarios» lista las cuentas bloqueadas, solo para el administrador, con la opción de generar una contraseña temporal.
+
 ## Datos y errores
 
 - **Paginación:** máximo 100 resultados por página.

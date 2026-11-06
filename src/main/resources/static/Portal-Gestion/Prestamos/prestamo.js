@@ -327,6 +327,42 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
+    // ------------------------------------------- devolución con escáner
+    const eInventario = el('eInventario');
+    const eError = el('eError');
+
+    function abrirEscaneo() {
+        el('formEscaneo').reset();
+        eError.hidden = true;
+        Ui.abrir('modalEscaneo');
+        setTimeout(() => eInventario.focus(), 50);
+    }
+
+    el('btnDevolverEscaner').addEventListener('click', abrirEscaneo);
+
+    el('formEscaneo').addEventListener('submit', async ev => {
+        ev.preventDefault();
+        eError.hidden = true;
+        try {
+            const p = await Api.get('/api/prestamos/inventario/' + encodeURIComponent(eInventario.value.trim()));
+            Ui.cerrar('modalEscaneo');
+            abrirDevolucion(p);
+        } catch (e) {
+            mostrarError(eError, e); // por ejemplo: ese ejemplar no tiene un préstamo abierto
+        }
+    });
+
+    // ------------------------------- accesos directos desde el dashboard
+    const params = new URLSearchParams(window.location.search);
+    const estadoInicial = params.get('estado');
+    if (['ACTIVO', 'DEVUELTO', 'VENCIDO'].includes(estadoInicial)) {
+        filtro.estado = estadoInicial;
+        botonesEstado.forEach(b => b.classList.toggle('active', b.dataset.estado === estadoInicial));
+    }
+
     cargar();
     cargarResumen();
+
+    if (puedeOperar && params.get('nuevo') === '1') el('btnNuevo').click();
+    if (puedeOperar && params.get('devolver') === '1') abrirEscaneo();
 });

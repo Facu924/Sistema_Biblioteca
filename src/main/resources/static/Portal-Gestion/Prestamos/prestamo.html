@@ -104,9 +104,14 @@
                         <h2>Gestión de Préstamos</h2>
                         <span class="subtitle" id="subtitulo">Cargando préstamos...</span>
                     </div>
-                    <button class="btn-primary" type="button" id="btnNuevo" data-solo="ROLE_BIBLIOTECARIA">
-                        <i class="ph ph-plus"></i> Nuevo Préstamo
-                    </button>
+                    <div class="ui-botones-encabezado">
+                        <button class="ui-btn secundario" type="button" id="btnDevolverEscaner" data-solo="ROLE_BIBLIOTECARIA">
+                            <i class="ph ph-arrow-down-tray"></i> Devolver con escáner
+                        </button>
+                        <button class="btn-primary" type="button" id="btnNuevo" data-solo="ROLE_BIBLIOTECARIA">
+                            <i class="ph ph-plus"></i> Nuevo Préstamo
+                        </button>
+                    </div>
                 </div>
 
                 <!-- TARJETAS DE MÉTRICAS RÁPIDAS -->
@@ -227,6 +232,28 @@
                 <div class="ui-pie">
                     <button type="button" class="ui-btn secundario" data-cerrar>Cancelar</button>
                     <button type="submit" class="ui-btn primario" id="dEnviar">Confirmar devolución</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: DEVOLUCIÓN CON ESCÁNER -->
+    <div class="ui-overlay" id="modalEscaneo" aria-hidden="true">
+        <div class="ui-modal" role="dialog" aria-labelledby="tituloModalEscaneo">
+            <header>
+                <h3 id="tituloModalEscaneo">Devolver con escáner</h3>
+                <button type="button" class="ui-cerrar" data-cerrar aria-label="Cerrar">&times;</button>
+            </header>
+            <form id="formEscaneo" autocomplete="off">
+                <div class="ui-campo">
+                    <label for="eInventario">Número de inventario del libro que vuelve</label>
+                    <input type="text" id="eInventario" placeholder="Escaneá el código de barras" required>
+                    <div class="ui-ayuda">Se busca el préstamo abierto de ese ejemplar y se abre la devolución.</div>
+                </div>
+                <div id="eError" class="ui-aviso error" role="alert" hidden></div>
+                <div class="ui-pie">
+                    <button type="button" class="ui-btn secundario" data-cerrar>Cancelar</button>
+                    <button type="submit" class="ui-btn primario">Buscar préstamo</button>
                 </div>
             </form>
         </div>

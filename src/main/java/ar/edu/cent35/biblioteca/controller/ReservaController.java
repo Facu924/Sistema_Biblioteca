@@ -1,7 +1,9 @@
 package ar.edu.cent35.biblioteca.controller;
 
+import ar.edu.cent35.biblioteca.dto.PaginaResponse;
 import ar.edu.cent35.biblioteca.dto.ReservaRequest;
 import ar.edu.cent35.biblioteca.dto.ReservaResponse;
+import ar.edu.cent35.biblioteca.model.enums.EstadoReserva;
 import ar.edu.cent35.biblioteca.service.ReservaService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -28,6 +30,15 @@ public class ReservaController {
     @PreAuthorize(LECTOR)
     public ReservaResponse crear(@Valid @RequestBody ReservaRequest req, Authentication auth) {
         return reservaService.crear(req.idLibro(), auth.getName());
+    }
+
+    /** Listado general de reservas para el personal. Filtro opcional: estado. */
+    @GetMapping
+    @PreAuthorize(PERSONAL)
+    public PaginaResponse<ReservaResponse> listar(@RequestParam(required = false) EstadoReserva estado,
+                                                  @RequestParam(defaultValue = "0") int pagina,
+                                                  @RequestParam(defaultValue = "20") int tamanio) {
+        return reservaService.listar(estado, pagina, tamanio);
     }
 
     @GetMapping("/mias")

@@ -1,5 +1,6 @@
 package ar.edu.cent35.biblioteca.service;
 
+import ar.edu.cent35.biblioteca.dto.PaginaResponse;
 import ar.edu.cent35.biblioteca.dto.ReservaResponse;
 import ar.edu.cent35.biblioteca.exception.ReglaNegocioException;
 import ar.edu.cent35.biblioteca.exception.ResourceNotFoundException;
@@ -14,6 +15,8 @@ import ar.edu.cent35.biblioteca.repository.LibroRepository;
 import ar.edu.cent35.biblioteca.repository.ReservaRepository;
 import java.time.LocalDateTime;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -79,6 +82,15 @@ public class ReservaService {
         }
         return reservaRepository.findByLibro_IdLibroAndEstadoReservaOrderByFechaSolicitudAsc(
                 idLibro, EstadoReserva.PENDIENTE).stream().map(this::aRespuesta).toList();
+    }
+
+    /** Listado general para el personal (por ejemplo, todas las pendientes), en orden de llegada. */
+    @Transactional(readOnly = true)
+    public PaginaResponse<ReservaResponse> listar(EstadoReserva estado, int pagina, int tamanio) {
+        Page<Reserva> r = reservaRepository.buscar(estado,
+                PageRequest.of(Math.max(pagina, 0), Math.min(Math.max(tamanio, 1), 100)));
+        return new PaginaResponse<>(r.getContent().stream().map(this::aRespuesta).toList(),
+                r.getNumber(), r.getSize(), r.getTotalElements(), r.getTotalPages());
     }
 
     /** El lector cancela las suyas; el personal puede cancelar cualquiera. */

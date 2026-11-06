@@ -7,6 +7,7 @@
     <!-- Iconos Phosphor Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link rel="stylesheet" href="catalogo.css">
+    <link rel="stylesheet" href="../../comun/ui.css">
 </head>
 <body>
 
@@ -80,12 +81,12 @@
                 <div class="navbar-right">
                     <div class="search-box nav-search">
                         <i class="ph ph-magnifying-glass search-icon"></i>
-                        <input type="text" placeholder="Buscar...">
+                        <input type="text" id="buscarNav" placeholder="Buscar..." autocomplete="off">
                     </div>
                     
                     <button class="notif-btn" type="button">
                         <i class="ph ph-bell"></i>
-                        <span class="badge">3</span>
+                        <span class="badge" id="badgeMora" hidden>0</span>
                     </button>
                     
                     <div class="user-profile">
@@ -105,9 +106,9 @@
                 <div class="catalog-header">
                     <div>
                         <h2>Catálogo de Libros</h2>
-                        <span class="subtitle">8 libros encontrados</span>
+                        <span class="subtitle" id="subtitulo">Cargando libros...</span>
                     </div>
-                    <button class="btn-primary" type="button">
+                    <button class="btn-primary" type="button" id="btnAgregar" data-solo="ROLE_BIBLIOTECARIA">
                         <i class="ph ph-plus"></i> Agregar Libro
                     </button>
                 </div>
@@ -116,16 +117,9 @@
                 <div class="filter-bar">
                     <div class="search-box main-search">
                         <i class="ph ph-magnifying-glass search-icon"></i>
-                        <input type="text" placeholder="Buscar por título, autor o ISBN...">
+                        <input type="text" id="buscar" placeholder="Buscar por título, autor, editorial o ISBN..." autocomplete="off">
                     </div>
-                    <div class="category-filters">
-                        <button class="filter-btn active" type="button">Todas</button>
-                        <button class="filter-btn" type="button">Matemáticas</button>
-                        <button class="filter-btn" type="button">Ciencias</button>
-                        <button class="filter-btn" type="button">Tecnología</button>
-                        <button class="filter-btn" type="button">Humanidades</button>
-                        <button class="filter-btn" type="button">Arte</button>
-                    </div>
+                    <div class="category-filters" id="filtrosCategoria"></div>
                 </div>
 
                 <!-- TABLA DE LIBROS -->
@@ -143,203 +137,145 @@
                                 <th>Acciones</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td class="text-muted">978-0-13-468599-1</td>
-                                <td>
-                                    <div class="book-title-cell">
-                                        <span class="book-cover cyan"><i class="ph ph-book-open"></i></span>
-                                        <strong>Cálculo Diferencial e Inte...</strong>
-                                    </div>
-                                </td>
-                                <td>James Stewart</td>
-                                <td><span class="cat-pill blue">Matemáticas</span></td>
-                                <td>Cengage Learning</td>
-                                <td>3/5</td>
-                                <td><span class="status-pill success">Disponible</span></td>
-                                <td>
-                                    <div class="actions">
-                                        <button class="icon-btn" title="Ver"><i class="ph ph-eye"></i></button>
-                                        <button class="icon-btn" title="Editar"><i class="ph ph-pencil-simple"></i></button>
-                                        <button class="icon-btn danger" title="Eliminar"><i class="ph ph-trash"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-muted">978-0-32-197107-5</td>
-                                <td>
-                                    <div class="book-title-cell">
-                                        <span class="book-cover green"><i class="ph ph-book"></i></span>
-                                        <strong>Física Universitaria Vol. 1</strong>
-                                    </div>
-                                </td>
-                                <td>Hugh D. Young</td>
-                                <td><span class="cat-pill light-blue">Ciencias</span></td>
-                                <td>Pearson</td>
-                                <td>0/4</td>
-                                <td><span class="status-pill danger">Agotado</span></td>
-                                <td>
-                                    <div class="actions">
-                                        <button class="icon-btn" title="Ver"><i class="ph ph-eye"></i></button>
-                                        <button class="icon-btn" title="Editar"><i class="ph ph-pencil-simple"></i></button>
-                                        <button class="icon-btn danger" title="Eliminar"><i class="ph ph-trash"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-muted">978-0-26-204630-5</td>
-                                <td>
-                                    <div class="book-title-cell">
-                                        <span class="book-cover orange"><i class="ph ph-book"></i></span>
-                                        <strong>Introducción a los Algorit...</strong>
-                                    </div>
-                                </td>
-                                <td>Thomas H. Cormen</td>
-                                <td><span class="cat-pill soft-blue">Tecnología</span></td>
-                                <td>MIT Press</td>
-                                <td>2/3</td>
-                                <td><span class="status-pill success">Disponible</span></td>
-                                <td>
-                                    <div class="actions">
-                                        <button class="icon-btn" title="Ver"><i class="ph ph-eye"></i></button>
-                                        <button class="icon-btn" title="Editar"><i class="ph ph-pencil-simple"></i></button>
-                                        <button class="icon-btn danger" title="Eliminar"><i class="ph ph-trash"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-muted">978-84-76-15843-4</td>
-                                <td>
-                                    <div class="book-title-cell">
-                                        <span class="book-cover purple"><i class="ph ph-book-open"></i></span>
-                                        <strong>Química General</strong>
-                                    </div>
-                                </td>
-                                <td>Raymond Chang</td>
-                                <td><span class="cat-pill light-blue">Ciencias</span></td>
-                                <td>McGraw-Hill</td>
-                                <td>1/6</td>
-                                <td><span class="status-pill success">Disponible</span></td>
-                                <td>
-                                    <div class="actions">
-                                        <button class="icon-btn" title="Ver"><i class="ph ph-eye"></i></button>
-                                        <button class="icon-btn" title="Editar"><i class="ph ph-pencil-simple"></i></button>
-                                        <button class="icon-btn danger" title="Eliminar"><i class="ph ph-trash"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-muted">978-0-07-352934-0</td>
-                                <td>
-                                    <div class="book-title-cell">
-                                        <span class="book-cover dark-purple"><i class="ph ph-book-open"></i></span>
-                                        <strong>Principios de Economía</strong>
-                                    </div>
-                                </td>
-                                <td>N. Gregory Mankiw</td>
-                                <td><span class="cat-pill soft-purple">Humanidades</span></td>
-                                <td>Cengage</td>
-                                <td>0/2</td>
-                                <td><span class="status-pill danger">Agotado</span></td>
-                                <td>
-                                    <div class="actions">
-                                        <button class="icon-btn" title="Ver"><i class="ph ph-eye"></i></button>
-                                        <button class="icon-btn" title="Editar"><i class="ph ph-pencil-simple"></i></button>
-                                        <button class="icon-btn danger" title="Eliminar"><i class="ph ph-trash"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-muted">978-0-13-235088-4</td>
-                                <td>
-                                    <div class="book-title-cell">
-                                        <span class="book-cover cyan"><i class="ph ph-book-open"></i></span>
-                                        <strong>Programación en C++</strong>
-                                    </div>
-                                </td>
-                                <td>Bjarne Stroustrup</td>
-                                <td><span class="cat-pill soft-blue">Tecnología</span></td>
-                                <td>Pearson</td>
-                                <td>4/4</td>
-                                <td><span class="status-pill success">Disponible</span></td>
-                                <td>
-                                    <div class="actions">
-                                        <button class="icon-btn" title="Ver"><i class="ph ph-eye"></i></button>
-                                        <button class="icon-btn" title="Editar"><i class="ph ph-pencil-simple"></i></button>
-                                        <button class="icon-btn danger" title="Eliminar"><i class="ph ph-trash"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-muted">978-950-07-3455-1</td>
-                                <td>
-                                    <div class="book-title-cell">
-                                        <span class="book-cover yellow"><i class="ph ph-book-open"></i></span>
-                                        <strong>Historia Argentina Conte...</strong>
-                                    </div>
-                                </td>
-                                <td>Félix Luna</td>
-                                <td><span class="cat-pill soft-purple">Humanidades</span></td>
-                                <td>Sudamericana</td>
-                                <td>1/3</td>
-                                <td><span class="status-pill success">Disponible</span></td>
-                                <td>
-                                    <div class="actions">
-                                        <button class="icon-btn" title="Ver"><i class="ph ph-eye"></i></button>
-                                        <button class="icon-btn" title="Editar"><i class="ph ph-pencil-simple"></i></button>
-                                        <button class="icon-btn danger" title="Eliminar"><i class="ph ph-trash"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-muted">978-0-19-956253-3</td>
-                                <td>
-                                    <div class="book-title-cell">
-                                        <span class="book-cover light-blue"><i class="ph ph-book-open"></i></span>
-                                        <strong>El Quijote</strong>
-                                    </div>
-                                </td>
-                                <td>Miguel de Cervantes</td>
-                                <td><span class="cat-pill soft-cyan">Arte</span></td>
-                                <td>Oxford</td>
-                                <td>2/2</td>
-                                <td><span class="status-pill success">Disponible</span></td>
-                                <td>
-                                    <div class="actions">
-                                        <button class="icon-btn" title="Ver"><i class="ph ph-eye"></i></button>
-                                        <button class="icon-btn" title="Editar"><i class="ph ph-pencil-simple"></i></button>
-                                        <button class="icon-btn danger" title="Eliminar"><i class="ph ph-trash"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
+                        <tbody id="tablaLibros"></tbody>
                     </table>
                 </div>
+                <div class="ui-paginacion" id="paginacion"></div>
             </main>
         </div>
     </div>
 
     <!-- SCRIPT INTERACTIVO -->
-    <script>
-        const sidebar = document.getElementById('sidebar');
-        const toggleBtn = document.getElementById('toggleBtn');
+    <!-- MODAL: AGREGAR / EDITAR LIBRO -->
+    <div class="ui-overlay" id="modalLibro" aria-hidden="true">
+        <div class="ui-modal ancho" role="dialog" aria-labelledby="tituloModalLibro">
+            <header>
+                <h3 id="tituloModalLibro">Agregar libro</h3>
+                <button type="button" class="ui-cerrar" data-cerrar aria-label="Cerrar">&times;</button>
+            </header>
+            <form id="formLibro" autocomplete="off">
+                <div class="ui-campo">
+                    <label for="lTitulo">Título *</label>
+                    <input type="text" id="lTitulo" maxlength="300" required>
+                </div>
+                <div class="ui-grid2">
+                    <div class="ui-campo">
+                        <label for="lAutor">Autor *</label>
+                        <input type="text" id="lAutor" list="dlAutores" maxlength="200" placeholder="Apellido, Nombre" required>
+                        <datalist id="dlAutores"></datalist>
+                        <div class="ui-ayuda">Si no existe, se crea al guardar.</div>
+                    </div>
+                    <div class="ui-campo">
+                        <label for="lEditorial">Editorial *</label>
+                        <input type="text" id="lEditorial" list="dlEditoriales" maxlength="200" required>
+                        <datalist id="dlEditoriales"></datalist>
+                        <div class="ui-ayuda">Si no existe, se crea al guardar.</div>
+                    </div>
+                </div>
+                <div class="ui-grid2">
+                    <div class="ui-campo">
+                        <label for="lMateria">Materia (CDU) *</label>
+                        <select id="lMateria" required></select>
+                    </div>
+                    <div class="ui-campo">
+                        <label for="lIsbn">ISBN</label>
+                        <input type="text" id="lIsbn" maxlength="20" placeholder="10 o 13 dígitos">
+                    </div>
+                </div>
+                <div class="ui-grid2" id="lMateriaNueva" hidden>
+                    <div class="ui-campo">
+                        <label for="lMatCodigo">Código CDU nuevo *</label>
+                        <input type="text" id="lMatCodigo" maxlength="30" placeholder="Ej: 821.134">
+                    </div>
+                    <div class="ui-campo">
+                        <label for="lMatNombre">Nombre del tema *</label>
+                        <input type="text" id="lMatNombre" maxlength="200" placeholder="Ej: Literatura hispanoamericana">
+                    </div>
+                </div>
+                <div class="ui-grid2">
+                    <div class="ui-campo">
+                        <label for="lAnio">Año de publicación</label>
+                        <input type="number" id="lAnio" min="1000" max="2100">
+                    </div>
+                    <div class="ui-campo">
+                        <label for="lPaginas">Páginas</label>
+                        <input type="number" id="lPaginas" min="1">
+                    </div>
+                </div>
+                <div class="ui-campo">
+                    <label for="lEdicion">Edición</label>
+                    <input type="text" id="lEdicion" maxlength="100">
+                </div>
+                <div class="ui-campo">
+                    <label for="lResumen">Resumen</label>
+                    <textarea id="lResumen" rows="3" maxlength="5000"></textarea>
+                </div>
+                <div id="lError" class="ui-aviso error" role="alert" hidden></div>
+                <div class="ui-pie">
+                    <button type="button" class="ui-btn secundario" data-cerrar>Cancelar</button>
+                    <button type="submit" class="ui-btn primario" id="lEnviar">Guardar libro</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-        // Alternar sidebar
-        toggleBtn.addEventListener('click', () => {
-            sidebar.classList.toggle('collapsed');
-        });
+    <!-- MODAL: DETALLE DEL LIBRO (datos, ejemplares y material digital) -->
+    <div class="ui-overlay" id="modalDetalle" aria-hidden="true">
+        <div class="ui-modal ancho" role="dialog" aria-labelledby="detalleTitulo">
+            <header>
+                <h3 id="detalleTitulo">Detalle del libro</h3>
+                <button type="button" class="ui-cerrar" data-cerrar aria-label="Cerrar">&times;</button>
+            </header>
+            <div class="ui-cuerpo" id="detalleCuerpo"></div>
+            <div class="ui-pie"><button type="button" class="ui-btn secundario" data-cerrar>Cerrar</button></div>
+        </div>
+    </div>
 
-        // Selección activa de botones de categoría
-        const filterBtns = document.querySelectorAll('.filter-btn');
-        filterBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                filterBtns.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-            });
-        });
-    </script>
-    <!-- Sesión: usuario conectado, rol y cierre de sesión -->
+    <!-- MODAL: CAMBIAR ESTADO DE UN EJEMPLAR -->
+    <div class="ui-overlay" id="modalEstado" aria-hidden="true">
+        <div class="ui-modal" role="dialog" aria-labelledby="tituloModalEstado">
+            <header>
+                <h3 id="tituloModalEstado">Cambiar estado del ejemplar</h3>
+                <button type="button" class="ui-cerrar" data-cerrar aria-label="Cerrar">&times;</button>
+            </header>
+            <form id="formEstado" autocomplete="off">
+                <div class="ui-resumen" id="estadoResumen"></div>
+                <div class="ui-campo">
+                    <label for="eEstadoNuevo">Nuevo estado</label>
+                    <select id="eEstadoNuevo"></select>
+                </div>
+                <div class="ui-campo" id="eObsCampo" hidden>
+                    <label for="eObs">Motivo (obligatorio)</label>
+                    <textarea id="eObs" rows="3" maxlength="300" placeholder="Por ejemplo: tapa despegada, donado a otra institución..."></textarea>
+                </div>
+                <div id="eEstadoError" class="ui-aviso error" role="alert" hidden></div>
+                <div class="ui-pie">
+                    <button type="button" class="ui-btn secundario" data-cerrar>Cancelar</button>
+                    <button type="submit" class="ui-btn primario" id="eEstadoEnviar">Confirmar cambio</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: ELIMINAR LIBRO -->
+    <div class="ui-overlay" id="modalEliminar" aria-hidden="true">
+        <div class="ui-modal" role="dialog" aria-labelledby="tituloModalEliminar">
+            <header>
+                <h3 id="tituloModalEliminar">Eliminar libro</h3>
+                <button type="button" class="ui-cerrar" data-cerrar aria-label="Cerrar">&times;</button>
+            </header>
+            <div class="ui-cuerpo">
+                <p id="eliminarTexto"></p>
+                <div id="eliminarError" class="ui-aviso error" role="alert" hidden></div>
+            </div>
+            <div class="ui-pie">
+                <button type="button" class="ui-btn secundario" data-cerrar>Cancelar</button>
+                <button type="button" class="ui-btn peligro" id="btnConfirmarEliminar">Eliminar</button>
+            </div>
+        </div>
+    </div>
+
     <script src="../../comun/api.js"></script>
-    <script>Sesion.requerir(['ROLE_BIBLIOTECARIA', 'ROLE_ADMIN']);</script>
+    <script src="catalogo.js"></script>
 </body>
 </html>
