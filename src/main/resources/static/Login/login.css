@@ -1,0 +1,263 @@
+/* Reseteo básico y tipografía */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+body {
+    display: flex;
+    height: 100vh;
+    background-color: #f3f6f9;
+}
+
+/* --- COLUMNA IZQUIERDA (Informativa) --- */
+.sidebar {
+    flex: 1.1;
+    background-color: #1a3250; /* Azul oscuro institucional */
+    color: #ffffff;
+    padding: 60px 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.brand {
+    font-size: 1.2rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand-icon {
+    background-color: #3b82f6;
+    color: white;
+    padding: 6px 10px;
+    border-radius: 50%;
+    font-size: 0.9rem;
+    letter-spacing: -1px;
+}
+
+.hero-text h1 {
+    font-size: 2.8rem;
+    line-height: 1.2;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+.hero-text p {
+    color: #4da3ff;
+    font-size: 1.15rem;
+    line-height: 1.5;
+    max-width: 90%;
+    margin-bottom: 40px;
+}
+
+/* Tarjetas de estadísticas */
+.stats-container {
+    display: flex;
+    gap: 15px;
+}
+
+.stat-card {
+    background-color: rgba(255, 255, 255, 0.06);
+    padding: 20px;
+    border-radius: 12px;
+    flex: 1;
+    border: 1px solid rgba(255,255,255,0.05);
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+/* Heurística: Feedback visual al interactuar con las tarjetas informativas */
+.stat-card:hover {
+    transform: translateY(-2px);
+    background-color: rgba(255, 255, 255, 0.09);
+}
+
+.stat-icon {
+    margin-bottom: 15px;
+    opacity: 0.7;
+}
+
+.stat-number {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.stat-label {
+    color: #8a9bb3;
+    font-size: 0.85rem;
+}
+
+.footer {
+    color: #5a769a;
+    font-size: 0.85rem;
+}
+
+/* --- COLUMNA DERECHA (Formulario de Login) --- */
+.main-content {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f0f4f8;
+}
+
+.login-card {
+    background: #ffffff;
+    padding: 45px 40px;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
+    width: 100%;
+    max-width: 440px;
+    border: 1px solid #e2e8f0;
+}
+
+.login-card h2 {
+    color: #1e293b;
+    font-size: 1.8rem;
+    margin-bottom: 8px;
+}
+
+.login-card .subtitle {
+    color: #64748b;
+    font-size: 0.95rem;
+    margin-bottom: 35px;
+}
+
+.form-group {
+    margin-bottom: 22px;
+    position: relative;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #0f172a;
+    margin-bottom: 8px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 14px 16px;
+    background-color: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    color: #334155;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+/* Heurística: Visibilidad del estado del sistema (Feedback claro al enfocar campos) */
+.form-group input:focus {
+    border-color: #2b82e4;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(43, 130, 228, 0.15);
+}
+
+.eye-icon {
+    position: absolute;
+    right: 16px;
+    top: 42px;
+    color: #64748b;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: color 0.2s;
+}
+
+.eye-icon:hover {
+    color: #1e293b;
+}
+
+.forgot-link {
+    display: block;
+    text-align: right;
+    color: #2563eb;
+    text-decoration: none;
+    font-size: 0.85rem;
+    margin-top: -10px;
+    margin-bottom: 25px;
+}
+
+.forgot-link:hover {
+    text-decoration: underline;
+}
+
+.btn-submit {
+    width: 100%;
+    padding: 14px;
+    background-color: #1a3250;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+/* Heurística: Afordancia y respuesta interactiva clara en botones */
+.btn-submit:hover {
+    background-color: #112236;
+    transform: translateY(-1px);
+}
+
+.btn-submit:active {
+    transform: translateY(0);
+}
+
+/* Sección de Demo (Precarga de Sesión) */
+.demo-section {
+    margin-top: 35px;
+    text-align: center;
+}
+
+.demo-section p {
+    color: #64748b;
+    font-size: 0.85rem;
+    margin-bottom: 15px;
+}
+
+.demo-buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: space-between;
+}
+
+.demo-btn {
+    flex: 1;
+    padding: 10px;
+    background-color: #e0e7ff;
+    color: #1e3a8a;
+    border: 1px solid #c7d2fe;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.demo-btn:hover {
+    background-color: #c7d2fe;
+    transform: translateY(-1px);
+}
+
+/* Responsivo para tablets/móviles */
+@media (max-width: 900px) {
+    body {
+        flex-direction: column;
+        height: auto;
+    }
+    .sidebar {
+        display: none; /* Se oculta el panel izquierdo en móviles para priorizar el login */
+    }
+    .main-content {
+        padding: 20px;
+        min-height: 100vh;
+    }
+}

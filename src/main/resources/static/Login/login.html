@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biblioteca CENT 35 - Iniciar Sesión</title>
+    <link rel="stylesheet" href="login.css">
+    <link rel="stylesheet" href="../comun/ui.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+<body>
+
+    <!-- Panel Izquierdo Institucional -->
+    <div class="sidebar">
+        <div class="brand">
+            <div class="brand-icon">
+                <i  class="ph ph-books"></i>
+            </div> Biblioteca CENT 35
+        </div>
+        
+        <div class="hero-text">
+            <h1>Gestión académica<br>inteligente</h1>
+            <p>Administra el catálogo, préstamos y usuarios de la biblioteca con una plataforma moderna y eficiente.</p>
+            
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4da3ff" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+                    </div>
+                    <div class="stat-number" id="statLibros">—</div>
+                    <div class="stat-label">Libros en catálogo</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4da3ff" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    </div>
+                    <div class="stat-number" id="statDisponibles">—</div>
+                    <div class="stat-label">Ejemplares disponibles</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4da3ff" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+                    </div>
+                    <div class="stat-number" id="statDigitales">—</div>
+                    <div class="stat-label">Material digital</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            &copy; 2026 Biblioteca CENT 35 · Sistema de Gestión Académica
+        </div>
+    </div>
+
+    <!-- Panel Derecho - Formulario de Login -->
+    <div class="main-content">
+        <div class="login-card">
+            <h2>Iniciar Sesión</h2>
+            <p class="subtitle">Ingresa tus credenciales para acceder al sistema</p>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="mail">Correo electrónico</label>
+                    <input type="email" id="mail" placeholder="tu.correo@cent35.edu.ar" autocomplete="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <input type="password" id="password" placeholder="Ingresa tu contraseña" autocomplete="current-password" required>
+                    <!-- Icono de ojo simulado -->
+                    <span class="eye-icon" onclick="togglePassword()" title="Mostrar contraseña">
+                        <i class="ph ph-eye"></i>
+                    </span>
+                </div>
+                
+                <a href="#" class="forgot-link" id="olvido">¿Olvidaste tu contraseña?</a>
+                
+                <div id="loginError" class="form-error" role="alert" hidden></div>
+                
+                <button type="submit" class="btn-submit" id="btnIngresar">Iniciar Sesión</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="../comun/api.js"></script>
+    <script src="login.js"></script>
+</body>
+</html>

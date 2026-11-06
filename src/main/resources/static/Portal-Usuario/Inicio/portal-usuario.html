@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Académico - Biblioteca CENT 35</title>
+    <link rel="stylesheet" href="portal-usuario.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+<body>
+
+    <!-- NAVBAR SUPERIOR DEL PORTAL -->
+    <header class="user-navbar">
+<!-- Izquierda: Logo y Título -->
+        <div class="nav-brand">
+            <span class="brand-icon"><i class="ph ph-books"></i></span> 
+            <div>
+                Biblioteca CENT 35
+               <small>Portal Académico</small>
+            </div>
+        </div>
+    
+    <!-- Centro: Enlaces de Navegación -->
+        <nav class="nav-links">
+            <a href="#" class="active">Catálogo General</a>
+            <a href="#" onclick="openLoginModal()">Mis Préstamos y Historial</a>
+            <a href="#" onclick="openLoginModal()">Mis Reservas</a>
+        </nav>
+
+    <!-- Derecha: Botón de Identificarse (Inicio de sesión) -->
+        <div class="auth-actions">
+            <button class="btn-identificarse" onclick="openLoginModal()">
+                <span class="user-icon"><i class="ph ph-user"></i></span> Identificarse
+            </button>
+        </div>
+    </header>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="portal-container">
+        
+        <!-- Sección de Bienvenida y Buscador Principal -->
+        <section class="hero-search-section">
+            <h1>Bienvenido a la Biblioteca Digital y Física</h1>
+            <p>Busca libros en el catálogo, consulta ejemplares disponibles o accede a material digital en PDF y EPUB.</p>
+            
+            <div class="search-box-container">
+                <input type="text" placeholder="Buscar por título, autor, materia CDU o ISBN..." id="searchInput">
+                <button class="btn-search">Buscar en Catálogo</button>
+            </div>
+        </section>
+
+        <!-- Resultados / Libros Destacados y Digitales -->
+        <section class="catalog-section">
+            <div class="section-header">
+                <h2>Materiales Disponibles y Repositorio Digital</h2>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" onclick="filtrarCatalogo('todos')">Todos</button>
+                    <button class="filter-btn" onclick="filtrarCatalogo('fisico')">Libros Físicos</button>
+                    <button class="filter-btn" onclick="filtrarCatalogo('digital')">Repositorio Digital (PDF/EPUB)</button>
+                </div>
+            </div>
+
+            <!-- Grilla de Libros -->
+            <div class="books-grid" id="catalogoGrid">
+                
+                <!-- Tarjeta de Libro 1 (Ejemplo con material digital) -->
+                <div class="book-card" data-tipo="digital">
+                    <div class="book-badge digital">Digital (PDF)</div>
+                    <div class="book-cover-placeholder"><i class="ph ph-book-open"></i></div>
+                    <div class="book-details">
+                        <span class="book-category">Informática · CDU 004</span>
+                        <h3>Arquitectura de Computadoras y Sistemas</h3>
+                        <p class="book-author">Autor: William Stallings</p>
+                        <div class="book-status available">Stock físico: 3 en estante</div>
+                    </div>
+                    <div class="book-actions">
+                        <button class="action-btn secondary">Ver PDF en Tablet</button>
+                        <button class="action-btn primary">Reservar Físico</button>
+                    </div>
+                </div>
+
+                <!-- Tarjeta de Libro 2 (Ejemplo con restricción de stock mínimo) -->
+                <div class="book-card" data-tipo="fisico">
+                    <div class="book-badge physical">Físico</div>
+                    <div class="book-cover-placeholder"><i class="ph ph-book"></i></div>
+                    <div class="book-details">
+                        <span class="book-category">Matemática · CDU 510</span>
+                        <h3>Álgebra Lineal y Aplicaciones</h3>
+                        <p class="book-author">Autor: David C. Lay</p>
+                        <div class="book-status warning">Solo 1 en sala (Uso interno)</div>
+                    </div>
+                    <div class="book-actions">
+                        <button class="action-btn disabled" disabled>Préstamo Domiciliario Bloqueado</button>
+                    </div>
+                </div>
+
+                <!-- Tarjeta de Libro 3 -->
+                <div class="book-card" data-tipo="digital" >
+                    <div class="book-badge digital">Digital (EPUB)</div>
+                    <div class="book-cover-placeholder"><i class="ph ph-book"></i></div>
+                    <div class="book-details">
+                        <span class="book-category">Metodología · CDU 001</span>
+                        <h3>Guía de Tesis y Trabajos Finales</h3>
+                        <p class="book-author">Autor: CENT 35 (Repositorio)</p>
+                        <div class="book-status available">Disponible para descarga</div>
+                    </div>
+                    <div class="book-actions">
+                        <button class="action-btn secondary">Descargar EPUB</button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+    <script src="../../comun/api.js"></script>
+    <script src="portal-usuario.js"></script>
+</body>
+</html>

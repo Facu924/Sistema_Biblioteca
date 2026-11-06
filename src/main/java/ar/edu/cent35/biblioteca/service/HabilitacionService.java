@@ -45,20 +45,34 @@ public class HabilitacionService {
 
     @Transactional(readOnly = true)
     public void verificarPuedeOperar(Lector lector) {
-        Usuario usuario = usuarioDe(lector);
+        String motivo = motivoNoPuedeOperar(lector);
+        if (motivo != null) {
+            throw new ReglaNegocioException(motivo);
+        }
+    }
+
+    /** Devuelve por qué el lector no puede operar, o null si puede. No lanza excepciones. */
+    @Transactional(readOnly = true)
+    public String motivoNoPuedeOperar(Lector lector) {
+        Usuario usuario = usuarioRepository.findByPersona_IdPersona(lector.getPersona().getIdPersona())
+                .orElse(null);
+        if (usuario == null) {
+            return "El lector no tiene un usuario asociado";
+        }
         if (!Boolean.TRUE.equals(usuario.getActivo())) {
-            throw new ReglaNegocioException("El usuario está dado de baja");
+            return "El usuario está dado de baja";
         }
         if (Boolean.TRUE.equals(usuario.getCuentaBloqueada())) {
-            throw new ReglaNegocioException("La cuenta del usuario está bloqueada");
+            return "La cuenta del usuario está bloqueada";
         }
         List<Penalizacion> vigentes = penalizacionRepository.findVigentes(lector.getIdLector(), LocalDate.now());
         if (!vigentes.isEmpty()) {
             Penalizacion p = vigentes.get(0);
-            throw new ReglaNegocioException("El lector tiene una penalización vigente"
+            return "El lector tiene una penalización vigente"
                     + (p.getFechaFin() == null ? " (hasta que la bibliotecaria la levante)"
                                                : " hasta el " + p.getFechaFin())
-                    + ": " + p.getMotivo());
+                    + ": " + p.getMotivo();
         }
+        return null;
     }
 }

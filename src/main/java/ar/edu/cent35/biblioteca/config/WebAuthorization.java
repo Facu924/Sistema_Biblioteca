@@ -25,10 +25,15 @@ public class WebAuthorization {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/web/login.html", "/web/libros.html",
-                        "/web/css/**", "/web/js/**", "/web/img/**").permitAll()
+                // Pantallas (HTML, CSS, JS e imágenes): públicas. Los datos los protege la API.
+                .requestMatchers("/", "/Login/**", "/comun/**", "/Portal-Gestion/**",
+                        "/Portal-Usuario/**", "/favicon.ico", "/web/**").permitAll()
                 .requestMatchers("/error").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/login", "/api/logout").permitAll()
+                // Consulta pública del catálogo, según el alcance del sistema.
+                // Los archivos digitales y los ejemplares siguen exigiendo sesión.
+                .requestMatchers(HttpMethod.GET, "/api/libros", "/api/libros/{id}",
+                        "/api/materias", "/api/publico/**").permitAll()
                 // Gestión de usuarios: solo administrador
                 .requestMatchers("/api/usuarios/**").hasAuthority("ROLE_ADMIN")
                 // El resto de la API exige sesión; el rol fino va en @PreAuthorize
@@ -59,6 +64,8 @@ public class WebAuthorization {
                 .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler()))
             .exceptionHandling(ex -> ex
                 .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
+            // Permite mostrar los PDF dentro de una página del mismo sitio (visor del portal)
+            .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
             .csrf(csrf -> csrf.disable());
 
         return http.build();

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Préstamos - Biblioteca CENT 35</title>
+    <!-- Iconos Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="prestamo.css">
+    <link rel="stylesheet" href="../../comun/ui.css">
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- SIDEBAR COLAPSABLE -->
+        <aside class="sidebar" id="sidebar">
+            <button class="toggle-btn" id="toggleBtn" type="button" title="Alternar menú">
+                <i class="ph ph-caret-left"></i>
+            </button>
+
+            <div>
+                <!-- Brand / Logo -->
+                <div class="brand">
+                    <div class="brand-icon">
+                        <i class="ph ph-books"></i>
+                    </div>
+                    <div class="brand-text">
+                        <h2>Biblioteca</h2>
+                        <span>CENT 35</span>
+                    </div>
+                </div>
+
+                <!-- Menú de Navegación -->
+                <nav class="nav-menu">
+                    <a href="../Dashboard/dashboard.html" class="nav-item">
+                        <i class="ph ph-squares-four"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="../Catalogo-libro/catalogo.html" class="nav-item">
+                        <i class="ph ph-book-open"></i>
+                        <span>Catálogo de Libros</span>
+                    </a>
+                    <a href="#" class="nav-item active">
+                        <i class="ph ph-files"></i>
+                        <span>Préstamos</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <i class="ph ph-clock-counter-clockwise"></i>
+                        <span>Historial</span>
+                    </a>
+                    <a href="#" class="nav-item" data-solo="ROLE_ADMIN">
+                        <i class="ph ph-users-three"></i>
+                        <span>Usuarios</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <i class="ph ph-user-circle"></i>
+                        <span>Mi Perfil</span>
+                    </a>
+                </nav>
+            </div>
+
+            <!-- Footer / Cerrar Sesión -->
+            <div class="sidebar-footer">
+                <a href="../../Login/login.html" class="logout-btn">
+                    <i class="ph ph-sign-out"></i>
+                    <span>Cerrar Sesión</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- ÁREA PRINCIPAL -->
+        <div class="main-content">
+            <!-- NAVBAR SUPERIOR -->
+            <header class="navbar">
+                <h1 class="page-title">Gestión de Préstamos</h1>
+                
+                <div class="navbar-right">
+                    <div class="search-box nav-search">
+                        <i class="ph ph-magnifying-glass search-icon"></i>
+                        <input type="text" id="buscarNav" placeholder="Buscar..." autocomplete="off">
+                    </div>
+                    
+                    <button class="notif-btn" type="button">
+                        <i class="ph ph-bell"></i>
+                        <span class="badge" id="badgeMora" hidden>0</span>
+                    </button>
+                    
+                    <div class="user-profile">
+                        <div class="avatar">M</div>
+                        <div class="user-details">
+                            <span class="user-name">María López</span>
+                            <span class="user-role">Bibliotecario</span>
+                        </div>
+                        <i class="ph ph-caret-down drop-icon"></i>
+                    </div>
+                </div>
+            </header>
+
+            <!-- CONTENIDO PRINCIPAL -->
+            <main class="dashboard-body">
+                <!-- ENCABEZADO DE SECCIÓN -->
+                <div class="section-header">
+                    <div>
+                        <h2>Gestión de Préstamos</h2>
+                        <span class="subtitle" id="subtitulo">Cargando préstamos...</span>
+                    </div>
+                    <button class="btn-primary" type="button" id="btnNuevo" data-solo="ROLE_BIBLIOTECARIA">
+                        <i class="ph ph-plus"></i> Nuevo Préstamo
+                    </button>
+                </div>
+
+                <!-- TARJETAS DE MÉTRICAS RÁPIDAS -->
+                <div class="kpi-loans-grid">
+                    <div class="kpi-loan-card">
+                        <span class="kpi-num blue" id="kpiActivos">–</span>
+                        <span class="kpi-label">Activos</span>
+                    </div>
+                    <div class="kpi-loan-card">
+                        <span class="kpi-num green" id="kpiDevueltos">–</span>
+                        <span class="kpi-label">Devueltos</span>
+                    </div>
+                    <div class="kpi-loan-card">
+                        <span class="kpi-num red" id="kpiVencidos">–</span>
+                        <span class="kpi-label">Vencidos</span>
+                    </div>
+                </div>
+
+                <!-- BARRA DE BÚSQUEDA Y FILTROS -->
+                <div class="filter-bar">
+                    <div class="search-box main-search">
+                        <i class="ph ph-magnifying-glass search-icon"></i>
+                        <input type="text" id="buscar" placeholder="Buscar por lector, legajo, libro, ISBN o inventario..." autocomplete="off">
+                    </div>
+                    <div class="status-filters">
+                        <button class="filter-btn active" type="button" data-estado="">Todos</button>
+                        <button class="filter-btn" type="button" data-estado="ACTIVO">Activo</button>
+                        <button class="filter-btn" type="button" data-estado="DEVUELTO">Devuelto</button>
+                        <button class="filter-btn" type="button" data-estado="VENCIDO">Vencido</button>
+                    </div>
+                </div>
+
+                <!-- TABLA DE PRÉSTAMOS -->
+                <div class="table-container">
+                    <table class="loans-table">
+                        <thead>
+                            <tr>
+                                <th>Usuario</th>
+                                <th>Libro / ISBN</th>
+                                <th>Préstamo</th>
+                                <th>Vencimiento</th>
+                                <th>Devolución</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaPrestamos"></tbody>
+                    </table>
+                </div>
+                <div class="ui-paginacion" id="paginacion"></div>
+            </main>
+        </div>
+    </div>
+
+
+    <!-- MODAL: NUEVO PRÉSTAMO -->
+    <div class="ui-overlay" id="modalPrestamo" aria-hidden="true">
+        <div class="ui-modal" role="dialog" aria-labelledby="tituloModalPrestamo">
+            <header>
+                <h3 id="tituloModalPrestamo">Nuevo préstamo</h3>
+                <button type="button" class="ui-cerrar" data-cerrar aria-label="Cerrar">&times;</button>
+            </header>
+            <form id="formPrestamo" autocomplete="off">
+                <div class="ui-campo">
+                    <label for="pLegajo">Legajo del lector</label>
+                    <input type="text" id="pLegajo" placeholder="Ej: A-1001" required>
+                    <div id="pLector" class="ui-aviso" hidden></div>
+                </div>
+                <div class="ui-campo">
+                    <label for="pInventario">Número de inventario</label>
+                    <input type="text" id="pInventario" placeholder="Escaneá el código de barras o escribí el número" required>
+                    <div class="ui-ayuda">El lector de códigos de barras escribe el número y confirma con Enter.</div>
+                </div>
+                <div class="ui-campo">
+                    <label for="pTipo">Tipo de préstamo</label>
+                    <select id="pTipo">
+                        <option value="SALA">Sala (se devuelve el mismo día)</option>
+                        <option value="AULA">Aula (se devuelve el mismo día)</option>
+                        <option value="DOMICILIO">Domicilio</option>
+                    </select>
+                </div>
+                <div id="pError" class="ui-aviso error" role="alert" hidden></div>
+                <div class="ui-pie">
+                    <button type="button" class="ui-btn secundario" data-cerrar>Cancelar</button>
+                    <button type="submit" class="ui-btn primario" id="pEnviar">Registrar préstamo</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: DEVOLUCIÓN -->
+    <div class="ui-overlay" id="modalDevolucion" aria-hidden="true">
+        <div class="ui-modal" role="dialog" aria-labelledby="tituloModalDevolucion">
+            <header>
+                <h3 id="tituloModalDevolucion">Registrar devolución</h3>
+                <button type="button" class="ui-cerrar" data-cerrar aria-label="Cerrar">&times;</button>
+            </header>
+            <form id="formDevolucion" autocomplete="off">
+                <div class="ui-resumen" id="dResumen"></div>
+                <div class="ui-campo">
+                    <label for="dEstado">¿En qué estado vuelve el material?</label>
+                    <select id="dEstado">
+                        <option value="DEVUELTO_OK">Devuelto sin novedad</option>
+                        <option value="DEVUELTO_CON_DANO">Devuelto con daño</option>
+                        <option value="PERDIDO">Extraviado</option>
+                    </select>
+                </div>
+                <div class="ui-campo" id="dObsCampo" hidden>
+                    <label for="dObs">Observaciones (obligatorio)</label>
+                    <textarea id="dObs" rows="3" maxlength="300" placeholder="Contá qué ocurrió con el ejemplar"></textarea>
+                </div>
+                <div class="ui-campo" id="dPenaCampo" hidden>
+                    <label for="dPena">Días de penalización</label>
+                    <input type="number" id="dPena" min="0" max="365" step="1">
+                    <div class="ui-ayuda" id="dPenaAyuda"></div>
+                </div>
+                <div id="dError" class="ui-aviso error" role="alert" hidden></div>
+                <div class="ui-pie">
+                    <button type="button" class="ui-btn secundario" data-cerrar>Cancelar</button>
+                    <button type="submit" class="ui-btn primario" id="dEnviar">Confirmar devolución</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="../../comun/api.js"></script>
+    <script src="prestamo.js"></script>
+</body>
+</html>

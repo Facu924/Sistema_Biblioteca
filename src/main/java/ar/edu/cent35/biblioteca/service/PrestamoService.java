@@ -3,6 +3,7 @@ package ar.edu.cent35.biblioteca.service;
 import ar.edu.cent35.biblioteca.dto.PaginaResponse;
 import ar.edu.cent35.biblioteca.dto.PrestamoRequest;
 import ar.edu.cent35.biblioteca.dto.PrestamoResponse;
+import ar.edu.cent35.biblioteca.dto.ResumenPrestamosResponse;
 import ar.edu.cent35.biblioteca.exception.ReglaNegocioException;
 import ar.edu.cent35.biblioteca.exception.ResourceNotFoundException;
 import ar.edu.cent35.biblioteca.model.acceso.Lector;
@@ -148,8 +149,8 @@ public class PrestamoService {
     }
 
     @Transactional(readOnly = true)
-    public PaginaResponse<PrestamoResponse> listar(EstadoPrestamo estado, String legajo, int pagina, int tamanio) {
-        Page<Prestamo> r = prestamoRepository.buscar(estado, legajo == null ? "" : legajo.trim(),
+    public PaginaResponse<PrestamoResponse> listar(EstadoPrestamo estado, String texto, int pagina, int tamanio) {
+        Page<Prestamo> r = prestamoRepository.buscar(estado, texto == null ? "" : texto.trim(),
                 PageRequest.of(Math.max(pagina, 0), Math.min(Math.max(tamanio, 1), 100)));
         return new PaginaResponse<>(r.getContent().stream().map(this::aRespuesta).toList(),
                 r.getNumber(), r.getSize(), r.getTotalElements(), r.getTotalPages());
@@ -179,6 +180,15 @@ public class PrestamoService {
         return prestamoRepository.findDelLector(lector.getIdLector()).stream().map(this::aRespuesta).toList();
     }
 
+    /** Totales por estado para las tarjetas de la pantalla. */
+    @Transactional(readOnly = true)
+    public ResumenPrestamosResponse resumen() {
+        return new ResumenPrestamosResponse(
+                prestamoRepository.countByEstadoPrestamo(EstadoPrestamo.ACTIVO),
+                prestamoRepository.countByEstadoPrestamo(EstadoPrestamo.DEVUELTO),
+                prestamoRepository.countByEstadoPrestamo(EstadoPrestamo.VENCIDO));
+    }
+
     public PrestamoResponse aRespuesta(Prestamo p) {
         return aRespuesta(p, null, null);
     }
@@ -191,6 +201,7 @@ public class PrestamoService {
         return new PrestamoResponse(
                 p.getIdPrestamo(), p.getEjemplar().getIdEjemplar(), p.getEjemplar().getNumeroInventario(),
                 p.getEjemplar().getLibro().getIdLibro(), p.getEjemplar().getLibro().getTitulo(),
+                p.getEjemplar().getLibro().getIsbn(),
                 p.getLector().getIdLector(), persona.getLegajo(), persona.getNombre() + " " + persona.getApellido(),
                 p.getTipoPrestamo(), p.getEstadoPrestamo(), p.getFechaPrestamo(), p.getFechaLimiteEntrega(),
                 p.getFechaDevolucionReal(), atraso, telefono, mail);

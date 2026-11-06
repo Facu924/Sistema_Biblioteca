@@ -3,6 +3,7 @@ package ar.edu.cent35.biblioteca.controller;
 import ar.edu.cent35.biblioteca.dto.PaginaResponse;
 import ar.edu.cent35.biblioteca.dto.PrestamoRequest;
 import ar.edu.cent35.biblioteca.dto.PrestamoResponse;
+import ar.edu.cent35.biblioteca.dto.ResumenPrestamosResponse;
 import ar.edu.cent35.biblioteca.model.enums.EstadoPrestamo;
 import ar.edu.cent35.biblioteca.service.PrestamoService;
 import jakarta.validation.Valid;
@@ -36,10 +37,17 @@ public class PrestamoController {
     @GetMapping
     @PreAuthorize(PERSONAL)
     public PaginaResponse<PrestamoResponse> listar(@RequestParam(required = false) EstadoPrestamo estado,
-                                                   @RequestParam(required = false) String legajo,
+                                                   @RequestParam(required = false) String texto,
                                                    @RequestParam(defaultValue = "0") int pagina,
                                                    @RequestParam(defaultValue = "20") int tamanio) {
-        return prestamoService.listar(estado, legajo, pagina, tamanio);
+        return prestamoService.listar(estado, texto, pagina, tamanio);
+    }
+
+    /** Totales por estado para las tarjetas de la pantalla de préstamos. */
+    @GetMapping("/resumen")
+    @PreAuthorize(PERSONAL)
+    public ResumenPrestamosResponse resumen() {
+        return prestamoService.resumen();
     }
 
     /** RF-BIB-07: préstamos en mora con los datos de contacto del lector. */

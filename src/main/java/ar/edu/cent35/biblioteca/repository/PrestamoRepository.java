@@ -19,6 +19,8 @@ public interface PrestamoRepository extends JpaRepository<Prestamo, Long> {
     /** Para el límite de préstamos simultáneos: contar con estados ACTIVO y VENCIDO. */
     long countByLector_IdLectorAndEstadoPrestamoIn(Long idLector, Collection<EstadoPrestamo> estados);
 
+    long countByEstadoPrestamo(EstadoPrestamo estado);
+
     /** El préstamo abierto (ACTIVO o VENCIDO) de un ejemplar, por su número de inventario. */
     @Query("""
             select p from Prestamo p join fetch p.ejemplar e join fetch e.libro
@@ -55,20 +57,33 @@ public interface PrestamoRepository extends JpaRepository<Prestamo, Long> {
     List<Prestamo> findEnMora(@Param("estados") Collection<EstadoPrestamo> estados,
                               @Param("hoy") LocalDate hoy);
 
+    /**
+     * Listado con filtro opcional por estado y búsqueda de texto por nombre del lector, legajo,
+     * título, ISBN o número de inventario (la collation la hace insensible a acentos y mayúsculas).
+     */
     @Query(value = """
-            select p from Prestamo p join fetch p.ejemplar e join fetch e.libro
+            select p from Prestamo p join fetch p.ejemplar e join fetch e.libro lb
               join fetch p.lector l join fetch l.persona pe
             where (:estado is null or p.estadoPrestamo = :estado)
-              and pe.legajo like concat('%', :legajo, '%')
+              and (pe.legajo like concat('%', :texto, '%')
+                   or concat(pe.nombre, ' ', pe.apellido) like concat('%', :texto, '%')
+                   or lb.titulo like concat('%', :texto, '%')
+                   or lb.isbn like concat('%', :texto, '%')
+                   or e.numeroInventario like concat('%', :texto, '%'))
             order by p.fechaPrestamo desc
             """,
             countQuery = """
-            select count(p) from Prestamo p join p.lector l join l.persona pe
+            select count(p) from Prestamo p join p.ejemplar e join e.libro lb
+              join p.lector l join l.persona pe
             where (:estado is null or p.estadoPrestamo = :estado)
-              and pe.legajo like concat('%', :legajo, '%')
+              and (pe.legajo like concat('%', :texto, '%')
+                   or concat(pe.nombre, ' ', pe.apellido) like concat('%', :texto, '%')
+                   or lb.titulo like concat('%', :texto, '%')
+                   or lb.isbn like concat('%', :texto, '%')
+                   or e.numeroInventario like concat('%', :texto, '%'))
             """)
     Page<Prestamo> buscar(@Param("estado") EstadoPrestamo estado,
-                          @Param("legajo") String legajo,
+                          @Param("texto") String texto,
                           Pageable pageable);
 
     /** Tarea diaria: los ACTIVO con fecha límite anterior a hoy pasan a VENCIDO. */

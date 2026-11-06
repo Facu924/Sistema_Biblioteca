@@ -1,0 +1,360 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+body {
+    background-color: #f3f6f9;
+    color: #1e293b;
+}
+
+/* Estilo general del Navbar */
+.user-navbar {
+    height: 75px;
+    background-color: #1a3250; /* Tus colores institucionales actuales */
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+}
+
+/* Zona derecha: Botón Identificarse */
+.auth-actions {
+    display: flex;
+    align-items: center;
+}
+
+.btn-identificarse {
+    background: transparent;
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+
+.btn-identificarse:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: #ffffff;
+}
+
+.user-icon {
+    font-size: 0.95rem;
+}
+
+.nav-brand {
+    font-size: 1.1rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.nav-brand small {
+    display: block;
+    font-size: 0.75rem;
+    color: #4da3ff;
+    font-weight: 400;
+}
+
+.brand-icon {
+    background-color: #3b82f6;
+    padding: 4px 8px;
+    border-radius: 50%;
+    font-size: 0.8rem;
+}
+
+.nav-links {
+    display: flex;
+    gap: 25px;
+}
+
+.nav-links a {
+    color: #94a3b8;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.nav-links a:hover, .nav-links a.active {
+    color: #ffffff;
+}
+
+.user-profile-menu {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.user-info {
+    text-align: right;
+}
+
+.user-name {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.user-role {
+    display: block;
+    font-size: 0.75rem;
+    color: #4da3ff;
+}
+
+.logout-btn-icon {
+    background: rgba(255,255,255,0.1);
+    padding: 8px;
+    border-radius: 50%;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: background 0.2s;
+}
+
+.logout-btn-icon:hover {
+    background: rgba(248, 113, 113, 0.2);
+}
+
+/* Contenedor Principal */
+.portal-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+/* Sección Buscador Hero */
+.hero-search-section {
+    background: linear-gradient(135deg, #1a3250 0%, #254670 100%);
+    color: white;
+    padding: 50px 40px;
+    border-radius: 16px;
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.hero-search-section h1 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.hero-search-section p {
+    color: #cbd5e1;
+    font-size: 1rem;
+    margin-bottom: 25px;
+}
+
+.search-box-container {
+    display: flex;
+    max-width: 700px;
+    margin: 0 auto;
+    background: white;
+    padding: 6px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.search-box-container input {
+    flex-grow: 1;
+    border: none;
+    padding: 12px 16px;
+    font-size: 0.95rem;
+    outline: none;
+    color: #1e293b;
+}
+
+.btn-search {
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    padding: 0 24px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-search:hover {
+    background-color: #2563eb;
+}
+
+/* Sección de Catálogo */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.section-header h2 {
+    font-size: 1.3rem;
+    color: #0f172a;
+}
+
+.filter-tabs {
+    display: flex;
+    gap: 10px;
+}
+
+.filter-buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.filter-btn {
+    background-color: #f1f5f9;
+    color: #475569;
+    border: 1px solid #cbd5e1;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.filter-btn:hover {
+    background-color: #e2e8f0;
+}
+
+/* Estilo cuando el botón está seleccionado/activo */
+.filter-btn.active {
+    background-color: #1a3250;
+    color: #ffffff;
+    border-color: #1a3250;
+}
+
+.tab {
+    padding: 6px 14px;
+    background: #e2e8f0;
+    border: none;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    color: #475569;
+}
+
+.tab.active {
+    background: #1a3250;
+    color: white;
+}
+
+/* Grilla de Libros */
+.books-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 20px;
+}
+
+.book-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.book-badge {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 0.75rem;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-weight: 600;
+}
+
+.book-badge.digital {
+    background: #e0e7ff;
+    color: #3730a3;
+}
+
+.book-badge.physical {
+    background: #f1f5f9;
+    color: #475569;
+}
+
+.book-cover-placeholder {
+    font-size: 2.5rem;
+    margin-bottom: 12px;
+}
+
+.book-category {
+    font-size: 0.75rem;
+    color: #64748b;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.book-card h3 {
+    font-size: 1.05rem;
+    color: #0f172a;
+    margin: 4px 0 8px 0;
+}
+
+.book-author {
+    font-size: 0.85rem;
+    color: #475569;
+    margin-bottom: 12px;
+}
+
+.book-status {
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
+.book-status.available {
+    color: #16a34a;
+}
+
+.book-status.warning {
+    color: #d97706; /* Refleja la regla de stock mínimo para sala */
+}
+
+.book-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.action-btn {
+    flex: 1;
+    padding: 10px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+}
+
+.action-btn.primary {
+    background-color: #1a3250;
+    color: white;
+}
+
+.action-btn.secondary {
+    background-color: #f1f5f9;
+    color: #1e293b;
+    border: 1px solid #cbd5e1;
+}
+
+.action-btn.disabled {
+    background-color: #e2e8f0;
+    color: #94a3b8;
+    cursor: not-allowed;
+}

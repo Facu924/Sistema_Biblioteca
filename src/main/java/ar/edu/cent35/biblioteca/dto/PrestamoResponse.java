@@ -12,6 +12,7 @@ public record PrestamoResponse(
         String numeroInventario,
         Long idLibro,
         String tituloLibro,
+        String isbn,
         Long idLector,
         String legajo,
         String nombreLector,

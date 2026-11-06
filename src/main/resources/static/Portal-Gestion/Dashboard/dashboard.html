@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biblioteca CENT 35 - Dashboard Avanzado</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <!-- Librería de Gráficos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+<body>
+    <!-- CONTENEDOR PRINCIPAL DE LA APLICACIÓN -->
+    <div class="app-container">
+        <!-- SIDEBAR COLAPSABLE -->
+<aside class="sidebar" id="sidebar">
+    <!-- Botón flotante para colapsar/desplegar -->
+    <button class="toggle-btn" id="toggleBtn" type="button" title="Alternar menú">
+        <i class="ph ph-caret-left"></i>
+    </button>
+
+    <div>
+        <!-- Encabezado / Logo CENT 35 -->
+        <div class="brand">
+            <div class="brand-icon">
+                <i class="ph ph-books"></i>
+            </div>
+            <div class="brand-text">
+                <h2>Biblioteca</h2>
+                <span>CENT 35</span>
+            </div>
+        </div>
+
+        <!-- Menú de Navegación -->
+        <nav class="nav-menu">
+            <a href="#" class="nav-item active">
+                <i class="ph ph-squares-four"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="../Catalogo-libro/catalogo.html" class="nav-item">
+                <i class="ph ph-book-open"></i>
+                <span>Catálogo de Libros</span>
+            </a>
+            <a href="../Prestamos/prestamo.html" class="nav-item">
+                <i class="ph ph-files"></i>
+                <span>Préstamos</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="ph ph-clock-counter-clockwise"></i>
+                <span>Historial</span>
+            </a>
+            <a href="#" class="nav-item" data-solo="ROLE_ADMIN">
+                <i class="ph ph-users-three"></i>
+                <span>Usuarios</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="ph ph-user-circle"></i>
+                <span>Mi Perfil</span>
+            </a>
+        </nav>
+    </div>
+
+    <!-- Footer / Cerrar Sesión -->
+    <div class="sidebar-footer">
+        <a href="../../Login/login.html" class="logout-btn">
+            <i class="ph ph-sign-out"></i>
+            <span>Cerrar Sesión</span>
+        </a>
+    </div>
+</aside>
+
+        <!-- ÁREA PRINCIPAL -->
+        <main class="main-content">
+            <!-- NAVBAR SUPERIOR -->
+            <header class="navbar">
+                <h1 class="page-title">Dashboard</h1>
+                
+                <div class="navbar-right">
+                    <div class="search-box">
+                        <span class="search-icon">
+                            <i class="ph ph-magnifying-glass"></i>
+                        </span>
+                        <input type="text" placeholder="Buscar libro, lector o DNI...">
+                    </div>
+                    
+                    <button class="notif-btn" title="Notificaciones de mora y reservas">
+                        <i class="ph ph-bell"></i>
+                        <span class="badge">4</span>
+                    </button>
+
+                    <div class="user-profile">
+                        <div class="avatar">ML</div>
+                        <div class="user-details">
+                            <span class="user-name">María López</span>
+                            <span class="user-role">Bibliotecario</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- CONTENIDO DASHBOARD -->
+            <div class="dashboard-body">
+                
+                <!-- CARDS DE ESTADÍSTICAS E INDICADORES (KPIs RESTRUCTURADOS) -->
+                <section class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-top">
+                            <div class="kpi-icon blue">
+                                <i class="ph ph-books"></i>
+                            </div>
+                            <span class="trend positive">↗ 1,321 dispon.</span>
+                        </div>
+                        <div class="kpi-value">1,842</div>
+                        <div class="kpi-label">Total en Catálogo</div>
+                    </div>
+
+                    <div class="kpi-card">
+                        <div class="kpi-top">
+                            <div class="kpi-icon orange">
+                                <i class="ph ph-file-text"></i>
+                            </div>
+                            <span class="trend positive">↗ 8.4%</span>
+                        </div>
+                        <div class="kpi-value">127</div>
+                        <div class="kpi-label">Préstamos Activos</div>
+                    </div>
+
+                    <div class="kpi-card">
+                        <div class="kpi-top">
+                            <div class="kpi-icon green">
+                                <i class="ph ph-check-circle"></i>
+                            </div>
+                            <span class="trend positive">91.2% a tiempo</span>
+                        </div>
+                        <div class="kpi-value">91%</div>
+                        <div class="kpi-label">Tasa de Devolución</div>
+                    </div>
+
+                    <div class="kpi-card danger-card">
+                        <div class="kpi-top">
+                            <div class="kpi-icon red">
+                                <i class="ph ph-warning"></i>
+                            </div>
+                            <span class="trend negative">Requiere acción</span>
+                        </div>
+                        <div class="kpi-value">14</div>
+                        <div class="kpi-label">Morosos / Bloqueados</div>
+                    </div>
+                </section>
+
+                <!-- SECCIÓN DE GRÁFICOS NIVEL 1 -->
+                <div class="grid-two-columns">
+                    <!-- Gráfico Principal: Préstamos vs Devoluciones -->
+                    <div class="card-box">
+                        <div class="card-header">
+                            <div>
+                                <h3>Flujo Mensual de Préstamos</h3>
+                                <p class="subtitle">Comparativa del año 2026</p>
+                            </div>
+                            <span class="badge-pill">+18% vs año anterior</span>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="chartPrestamos"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Gráfico Secundario: Top 5 Libros Más Pedidos -->
+                    <div class="card-box">
+                        <div class="card-header">
+                            <div>
+                                <h3>Top 5 Libros Más Demandados</h3>
+                                <p class="subtitle">Ranking de solicitudes del mes</p>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="chartTopLibros"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECCIÓN DE GRÁFICOS Y OPERATIVA NIVEL 2 -->
+                <div class="grid-three-columns mt-20">
+                    <!-- Categorías CDU (Donut) -->
+                    <div class="card-box">
+                        <div class="card-header">
+                            <h3>Por Categoría (CDU)</h3>
+                        </div>
+                        <div class="chart-doughnut-wrapper">
+                            <canvas id="chartCategorias"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Actividad Reciente en Mostrador -->
+                    <div class="card-box">
+                        <div class="card-header">
+                            <h3>Actividad Reciente</h3>
+                        </div>
+                        <ul class="activity-list">
+                            <li class="activity-item">
+                                <div class="item-avatar blue">AG</div>
+                                <div class="item-info">
+                                    <h4>Ana García</h4>
+                                    <p>Cálculo Diferencial - Stewart</p>
+                                </div>
+                                <div class="item-status">
+                                    <span class="status-tag prestamo">Préstamo</span>
+                                    <span class="time-text">hace 10 min</span>
+                                </div>
+                            </li>
+
+                            <li class="activity-item">
+                                <div class="item-avatar light-blue">CR</div>
+                                <div class="item-info">
+                                    <h4>Carlos Ruiz</h4>
+                                    <p>Física Universitaria - Young</p>
+                                </div>
+                                <div class="item-status">
+                                    <span class="status-tag devolucion">Devolución</span>
+                                    <span class="time-text">hace 35 min</span>
+                                </div>
+                            </li>
+
+                            <li class="activity-item">
+                                <div class="item-avatar red-avatar">DS</div>
+                                <div class="item-info">
+                                    <h4>Diego Sosa</h4>
+                                    <p>Química General - Chang</p>
+                                </div>
+                                <div class="item-status">
+                                    <span class="status-tag vence">Vence hoy</span>
+                                    <span class="time-text">hace 2h</span>
+                                </div>
+                            </li>
+
+                            <li class="activity-item">
+                                <div class="item-avatar blue">LV</div>
+                                <div class="item-info">
+                                    <h4>Laura Vega</h4>
+                                    <p>Historia Argentina - Luna</p>
+                                </div>
+                                <div class="item-status">
+                                    <span class="status-tag devolucion">Devolución</span>
+                                    <span class="time-text">hace 3h</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Panel de Accesos Rápidos y Alertas -->
+                    <div class="card-box">
+                        <div class="card-header">
+                            <h3>Gestión Rápida</h3>
+                        </div>
+                        <div class="quick-actions-list">
+                            <button class="quick-btn primary-btn">
+                                <span class="btn-icon">
+                                    <i class="ph ph-plus"></i>
+                                </span>
+                                <span>Nuevo Préstamo / Escáner</span>
+                            </button>
+                            <button class="quick-btn">
+                                <span class="btn-icon">
+                                    <i class="ph ph-arrow-down-tray"></i>
+                                </span>
+                                <span>Registrar Devolución</span>
+                            </button>
+                            <button class="quick-btn warning-btn">
+                                <span class="btn-icon">
+                                    <i class="ph ph-pin"></i>
+                                </span>
+                                <span>Reservas Pendientes (3)</span>
+                            </button>
+                            <button class="quick-btn alert-btn">
+                                <span class="btn-icon">
+                                    <i class="ph ph-unlock"></i>
+                                </span>
+                                <span>Desbloquear Usuarios (2)</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+    <script>
+    
+    </script>       
+
+    <script src="dashboard.js"></script>
+    <!-- Sesión: usuario conectado, rol y cierre de sesión -->
+    <script src="../../comun/api.js"></script>
+    <script>Sesion.requerir(['ROLE_BIBLIOTECARIA', 'ROLE_ADMIN']);</script>
+</body>
+</html>
