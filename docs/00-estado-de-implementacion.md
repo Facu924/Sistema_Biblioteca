@@ -1,8 +1,10 @@
 # Estado de implementación
 
-*Última actualización: octubre de 2026.*
+*Última actualización: noviembre de 2026.*
 
-Este documento relaciona cada requisito con lo que está hecho. **Implementado** significa que existe en la API (backend) y se verificó a mano con las colecciones de Postman. Las pantallas todavía no existen, por lo que lo que depende de ellas figura como parcial o pendiente.
+Este documento relaciona cada requisito con lo que está hecho. En la tabla siguiente, **Implementado** se refiere principalmente a la API (backend), verificada manualmente mediante Postman. El avance de las interfaces y de las pruebas automatizadas se informa por separado, para no confundir la existencia del código con la validación de un flujo completo.
+
+**Alcance de esta actualización:** se preparó la integración del historial de préstamos y se incorporó la pantalla «Lectores y Sanciones» al frontend. Estas funciones todavía requieren verificación integral contra el servidor y la base de datos reales. Se desarrollaron y ejecutaron pruebas automatizadas con Playwright fuera de la tarea `test` de Gradle; el alcance y los resultados de esas pruebas no se detallan aquí porque no se adjuntaron sus archivos ni su informe.
 
 ## Requisitos funcionales
 
@@ -41,11 +43,29 @@ El detalle de cada uno está al final de [`04-requisitos-no-funcionales.md`](04-
 
 Las historias `HU-01` a `HU-13` (documento original) y `HU-14` a `HU-24` (incorporadas durante el desarrollo) están implementadas en la API. `HU-07` y `HU-08` dependen de la interfaz para la visualización del material.
 
+## Estado de las interfaces de gestión
+
+| Pantalla | Situación a noviembre de 2026 |
+|---|---|
+| Ingreso, panel principal, catálogo y préstamos/devoluciones | Conectados con la API en las etapas anteriores; conviene mantener las verificaciones de regresión. |
+| Historial de préstamos | Se sustituyeron los registros estáticos por consultas a `/api/historial` y `/api/prestamos`, con contadores, filtros y detalle. **Pendiente:** probar la integración de punta a punta con registros reales y confirmar el formato exacto de las respuestas. |
+| Lectores y Sanciones | Nueva pantalla con pestañas para buscar lectores por legajo y consultar, crear y levantar penalizaciones mediante la API existente. **Pendiente:** verificar la integración, los mensajes de error y los permisos reales. |
+| Usuarios y Mi Perfil | Hay archivos de interfaz en el frontend; su funcionamiento integral no queda validado en esta actualización. |
+| Menú y visibilidad por rol | Se incorporaron accesos a la nueva sección en pantallas de gestión. **Pendiente:** unificar el menú en todas las pantallas y comprobar la visibilidad según el rol, además de los permisos de Spring Security. |
+
+## Pruebas automatizadas
+
+- Se desarrollaron y ejecutaron pruebas automatizadas con **Playwright** por separado; el usuario informó que finalizaron correctamente.
+- Se ejecutó `gradlew clean test` y terminó correctamente después de retirar el test de contexto predeterminado de Spring Boot que fallaba.
+- **Estas dos comprobaciones son independientes:** que Gradle termine correctamente no demuestra que haya ejecutado los tests de Playwright.
+- **Pendiente:** incorporar aquí las rutas, casos concretos y resultados de Playwright cuando se confirme su estructura definitiva en el repositorio; verificar los nuevos flujos contra MySQL.
+
 ## Pendientes
 
-1. **Aplicación de gestión** (bibliotecaria y administrador). Conectados con la API: ingreso, panel principal, catálogo y préstamos (con devoluciones). **Pendientes:** historial, usuarios y perfil, que todavía no tienen diseño.
-2. **Aplicación de autogestión** (alumnos y profesores). Existe el diseño de la pantalla de inicio con datos de ejemplo. **Pendiente:** conectarla (búsqueda, PDF y EPUB, reservas) y diseñar «Mis préstamos e historial» y «Mis reservas».
-3. **Importación masiva desde Aguapey.** Requiere un archivo de ejemplo del formato real.
-4. **Pruebas automatizadas.** La dependencia de Playwright ya está en `build.gradle`, pero todavía no hay pruebas escritas. Hasta ahora todo se verificó a mano con las colecciones de Postman.
-5. **Medición de rendimiento** (`RNF-PERF-01` y `RNF-PERF-02`).
-6. **Cierre de sesiones al dar de baja a un usuario** (ver limitaciones en `07-decisiones-de-diseno.md`).
+1. **Verificación integral de las pantallas nuevas:** historial y Lectores y Sanciones con sesión real, datos persistidos, paginación, filtros y errores.
+2. **Unificación de menú y permisos por rol:** «Usuarios» para administración; gestión de sanciones para bibliotecaria; restringir todas las operaciones desde el backend.
+3. **Aplicación de autogestión** (alumnos y profesores). Existe el diseño de la pantalla de inicio con datos de ejemplo. **Pendiente:** conectarla (búsqueda, PDF y EPUB, reservas) y diseñar «Mis préstamos e historial» y «Mis reservas».
+4. **Importación masiva desde Aguapey.** Requiere un archivo de ejemplo del formato real.
+5. **Completar la documentación de pruebas automatizadas:** ubicación, ejecución específica y cobertura de los tests de Playwright.
+6. **Medición de rendimiento** (`RNF-PERF-01` y `RNF-PERF-02`).
+7. **Cierre de sesiones al dar de baja a un usuario** (ver limitaciones en `07-decisiones-de-diseno.md`).

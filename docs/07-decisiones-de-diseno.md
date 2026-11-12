@@ -1,6 +1,6 @@
 # Decisiones de diseño
 
-*Última actualización: octubre de 2026.*
+*Última actualización: noviembre de 2026.*
 
 Este documento registra las decisiones que se tomaron durante el desarrollo, con su motivo, para que quien continúe el proyecto entienda por qué el sistema se comporta como lo hace.
 
@@ -94,6 +94,14 @@ Se definieron con la bibliotecaria, que explicó que las sanciones no siempre se
   - *Flujo mensual*: préstamos y devoluciones de los últimos 6 meses.
 - **Accesos del panel:** «Nuevo préstamo» y «Registrar devolución» abren esas ventanas en la pantalla de préstamos; la campana y la búsqueda llevan a los préstamos vencidos y al catálogo; «Reservas pendientes» lista la cola en orden de llegada (la bibliotecaria puede cancelar); y «Desbloquear usuarios» lista las cuentas bloqueadas, solo para el administrador, con la opción de generar una contraseña temporal.
 
+### Historial y gestión de lectores y sanciones (interfaz)
+
+- **Historial:** se preparó una línea de tiempo con consultas a `GET /api/prestamos` y `GET /api/historial`. La segunda ruta corresponde a devoluciones cerradas y la primera conserva también los préstamos abiertos y vencidos. Al combinar resultados se deben evitar duplicaciones de operaciones ya devueltas. Los filtros, contadores y detalles son responsabilidad de la interfaz, respetando la paginación de la API.
+- **Lectores y Sanciones:** la nueva pantalla separa las consultas de lectores y la gestión de penalizaciones en dos pestañas. Para lectores se utiliza la búsqueda **por legajo** (`GET /api/lectores?legajo=...`), no un listado general: ese último requeriría ampliar la API. Para sanciones se reutilizan `GET /api/penalizaciones`, `POST /api/penalizaciones` y `POST /api/penalizaciones/{id}/levantar`.
+- **Separación de responsabilidades:** la bibliotecaria puede consultar lectores y gestionar sanciones, mientras que la administración de cuentas y roles pertenece al administrador. El menú «Usuarios» debe reservarse a administración; el menú «Lectores y Sanciones» debe habilitar la gestión a bibliotecaria, sin otorgarle permisos de administración de cuentas.
+- **Seguridad:** ocultar una opción de navegación es solo una decisión de interfaz. Las operaciones deben seguir limitadas por las autorizaciones del backend. La visibilidad uniforme de los menús por rol queda pendiente de verificación.
+- **Estado de integración:** se incorporó el código del frontend, pero falta validar los flujos completos con servidor, sesión y base de datos reales. No se modificaron las entidades ni las reglas de sanciones por agregar la pantalla.
+
 ## Datos y errores
 
 - **Paginación:** máximo 100 resultados por página.
@@ -109,4 +117,4 @@ Se definieron con la bibliotecaria, que explicó que las sanciones no siempre se
 4. **La contraseña temporal** generada al desbloquear no obliga a cambiarla al primer ingreso, porque el modelo no tiene ese campo.
 5. **Los mensajes de login** distinguen entre credenciales inválidas, cuenta bloqueada y usuario inactivo, lo que permite saber si una cuenta existe. Es aceptable en una red interna.
 6. **No hay límite de reservas** por lector.
-7. **No hay pruebas automatizadas** ni mediciones de rendimiento.
+7. **Pruebas y rendimiento.** Se ejecutaron pruebas automatizadas con Playwright, pero su cobertura y forma concreta de ejecución todavía deben incorporarse a la documentación. No hay mediciones de rendimiento registradas.

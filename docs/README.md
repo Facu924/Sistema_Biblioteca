@@ -2,7 +2,7 @@
 
 Plataforma para modernizar y automatizar la gestión de la biblioteca del CENT 35. Reemplaza las planillas de cálculo descentralizadas por un sistema centralizado: préstamos con lector de códigos de barras, control automático de las reglas de la biblioteca, catálogo físico y digital, y autogestión para alumnos y profesores.
 
-> **Estado:** el backend (API REST) está completo y verificado a mano. Faltan las dos aplicaciones cliente, la importación masiva desde Aguapey y las pruebas automatizadas. Ver [`docs/00-estado-de-implementacion.md`](docs/00-estado-de-implementacion.md).
+> **Estado (noviembre de 2026):** el backend (API REST) está implementado y verificado manualmente. El frontend de gestión cuenta con ingreso, panel, catálogo y préstamos; se preparó la integración del historial y se agregó «Lectores y Sanciones», ambas pendientes de verificación integral con datos reales. Ya se realizaron pruebas automatizadas con Playwright, pero su cobertura debe documentarse. Siguen pendientes partes de la autogestión y la importación masiva desde Aguapey. Ver [`docs/00-estado-de-implementacion.md`](docs/00-estado-de-implementacion.md).
 
 ## Características
 
@@ -29,7 +29,13 @@ Plataforma para modernizar y automatizar la gestión de la biblioteca del CENT 3
 - **Construcción:** Gradle.
 - **Base de datos:** MySQL 8 o MariaDB, con collation `utf8mb4_unicode_ci`. En desarrollo se usa XAMPP.
 - **Archivos digitales:** sistema de archivos del servidor; la base guarda solo el nombre.
-- **Pruebas:** colecciones de Postman. Playwright incorporado para las pruebas automatizadas.
+- **Pruebas:** colecciones de Postman y pruebas automatizadas con Playwright ejecutadas por separado. La tarea `gradlew test` no implica por sí sola ejecutar Playwright.
+
+## Interfaces de gestión
+
+- **Historial de préstamos:** consulta movimientos de préstamos y devoluciones a través de `/api/prestamos` y `/api/historial`; el frontend incorpora filtros, estadísticas y detalle. Integración aún pendiente de validación de punta a punta.
+- **Lectores y Sanciones:** pantalla con búsqueda de lectores por legajo, consulta de penalizaciones y operaciones de creación y levantamiento para bibliotecaria. No implica nuevas tablas ni endpoints.
+- **Permisos:** «Usuarios» corresponde al administrador; la gestión operativa de sanciones corresponde a bibliotecaria. La ocultación de menús no reemplaza el control de acceso de Spring Security. Falta verificar la uniformidad del menú en todas las páginas.
 
 ## Cómo ejecutarlo
 

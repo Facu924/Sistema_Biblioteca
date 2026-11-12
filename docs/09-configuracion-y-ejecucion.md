@@ -1,6 +1,6 @@
 # Configuración y ejecución
 
-*Última actualización: octubre de 2026.*
+*Última actualización: noviembre de 2026.*
 
 ## Requisitos
 
@@ -84,6 +84,30 @@ La aplicación queda en `http://localhost:8080`. Al arrancar, la consola tiene q
 Para probar sin interfaz se usa Postman, con una colección por etapa (`Biblioteca-Etapa3`, `Etapa4` y `Etapa5`). La sesión se inicia con el pedido de login y Postman guarda la cookie. Hay que usar la **aplicación de escritorio** de Postman, porque la versión web no llega a `localhost`.
 
 Orden sugerido: iniciar sesión como administrador, crear una bibliotecaria y un alumno, iniciar sesión como bibliotecaria, cargar autor, editorial, materia, libro y dos ejemplares, y recién ahí registrar préstamos, devoluciones y reservas.
+
+## 6. Pruebas automatizadas
+
+Además de las colecciones de Postman, se realizaron **tests automatizados con Playwright**. En el desarrollo actual se ejecutaron por separado de la tarea `test` de Gradle; por eso conviene distinguir ambas verificaciones.
+
+**Comprobación de Gradle (Windows / PowerShell):**
+
+```powershell
+.\gradlew.bat clean test
+```
+
+**En otros sistemas:**
+
+```bash
+./gradlew clean test
+```
+
+- `clean` elimina los artefactos generados en `build/`, no los archivos fuente ni los datos de MySQL.
+- `test` ejecuta las pruebas que estén registradas en la tarea de Gradle. **No garantiza que ejecute Playwright** si los tests se lanzan mediante otro comando o herramienta.
+- En esta etapa se retiró el test de carga de contexto predeterminado de Spring Boot que fallaba; después, el comando de Gradle finalizó correctamente. Esto no equivale a una validación funcional integral.
+- Para ejecutar **Playwright**, utilizar el comando y la configuración propios de los tests existentes. **Pendiente de documentar:** su ubicación y comando exacto; no se incluyen aquí porque esos archivos no forman parte de la documentación entregada.
+- Para comprobar el detalle de los resultados de Gradle, abrir `build/reports/tests/test/index.html` cuando el informe exista.
+
+**Antes de ejecutar pruebas contra MySQL**, confirmar que utilicen datos de prueba y no alteren registros reales. También deben comprobarse manualmente las pantallas nuevas de Historial y Lectores y Sanciones, con sesión de bibliotecaria y administrador, incluyendo los casos de error y permisos.
 
 ## Estructura del proyecto
 
