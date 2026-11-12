@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lectores y Sanciones - Biblioteca CENT 35</title>
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <link rel="stylesheet" href="../../comun/ui.css">
+  <link rel="stylesheet" href="lectores-sanciones.css">
+</head>
+<body>
+<div class="app-container">
+<aside class="sidebar" id="sidebar">
+            <button class="toggle-btn" id="toggleBtn" type="button" title="Alternar menú">
+                <i class="ph ph-caret-left-bold"></i>
+            </button>
+
+            <div>
+                <!-- Brand / Logo -->
+                <div class="brand">
+                    <div class="brand-icon">
+                        <i class="ph ph-books"></i>
+                    </div>
+                    <div class="brand-text">
+                        <h2>Biblioteca</h2>
+                        <span>CENT 35</span>
+                    </div>
+                </div>
+
+                <!-- Menú de Navegación -->
+                <nav class="nav-menu">
+                    <a href="../Dashboard/dashboard.html" class="nav-item">
+                        <i class="ph ph-squares-four"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="../Catalogo-libro/catalogo.html" class="nav-item">
+                        <i class="ph ph-book-open"></i>
+                        <span>Catálogo de Libros</span>
+                    </a>
+                    <a href="../Prestamos/prestamo.html" class="nav-item">
+                        <i class="ph ph-files"></i>
+                        <span>Préstamos</span>
+                    </a>
+                    <a href="../Historial/historial.html" class="nav-item">
+                        <i class="ph ph-clock-counter-clockwise"></i>
+                        <span>Historial</span>
+                    </a>
+                    <a href="../Lectores-Sanciones/lectores-sanciones.html" class="nav-item active">
+                        <i class="ph ph-users-three"></i>
+                        <span>Lectores y Sanciones</span>
+                    </a>
+                    <a href="#" class="nav-item" data-solo="ROLE_ADMIN">
+                        <i class="ph ph-shield-check"></i>
+                        <span>Usuarios</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <i class="ph ph-user-circle"></i>
+                        <span>Mi Perfil</span>
+                    </a>
+                </nav>
+            </div>
+
+            <!-- Footer / Cerrar Sesión -->
+            <div class="sidebar-footer">
+                <a href="../../Login/login.html" class="logout-btn">
+                    <i class="ph ph-sign-out"></i>
+                    <span>Cerrar Sesión</span>
+                </a>
+            </div>
+        </aside>
+<div class="main-content">
+  <header class="navbar">
+    <h1 class="page-title">Lectores y Sanciones</h1>
+    <div class="navbar-right">
+      <button class="notif-btn" title="Préstamos vencidos" type="button"><i class="ph ph-bell"></i><span class="badge" id="badgeMora" hidden>0</span></button>
+      <div class="user-profile"><div class="avatar">—</div><div class="user-details"><span class="user-name">Cargando…</span><span class="user-role"></span></div></div>
+    </div>
+  </header>
+  <main class="dashboard-body">
+    <div class="section-header"><h2>Lectores y Sanciones</h2><span class="subtitle">Consulta de lectores y administración de penalizaciones de la biblioteca</span></div>
+    <div class="kpi-row">
+      <article class="metric"><div class="metric-label"><i class="ph ph-warning-circle"></i> Sanciones vigentes</div><strong id="kpiVigentes">—</strong></article>
+      <article class="metric"><div class="metric-label"><i class="ph ph-archive"></i> Total sanciones</div><strong id="kpiTotal">—</strong></article>
+      <article class="metric"><div class="metric-label"><i class="ph ph-check-circle"></i> Finalizadas</div><strong id="kpiFinalizadas">—</strong></article>
+    </div>
+    <section class="panel">
+      <div class="tabs" role="tablist" aria-label="Secciones">
+        <button class="tab active" type="button" id="tabLectores" role="tab" aria-selected="true" aria-controls="seccionLectores"><i class="ph ph-users-three"></i> Lectores</button>
+        <button class="tab" type="button" id="tabSanciones" role="tab" aria-selected="false" aria-controls="seccionSanciones"><i class="ph ph-shield-warning"></i> Sanciones</button>
+      </div>
+      <section id="seccionLectores" role="tabpanel" aria-labelledby="tabLectores" class="panel-content">
+        <div class="panel-header"><div><h3>Consultar lector</h3><p>Buscá por legajo para consultar su situación y sanciones.</p></div></div>
+        <form id="formBuscarLector" class="search-row"><label class="field"><span>Legajo del lector</span><input id="legajoBuscar" placeholder="Ej.: A-1001" required maxlength="80" autocomplete="off"></label><button type="submit" class="primary"><i class="ph ph-magnifying-glass"></i> Buscar lector</button></form>
+        <div id="lectorMensaje" class="empty" role="status">Ingresá un legajo para consultar la ficha de un alumno o docente.</div>
+        <div id="fichaLector" hidden>
+          <div class="reader-card"><div class="reader-avatar"><i class="ph ph-user"></i></div><div class="reader-info"><h3 id="lectorNombre">—</h3><p id="lectorMeta">—</p></div><span id="lectorEstado" class="chip">—</span></div>
+          <div class="reader-details"><div><span>Préstamos abiertos</span><strong id="lectorPrestamos">—</strong></div><div><span>Situación actual</span><strong id="lectorMotivo">—</strong></div></div>
+          <div class="reader-actions"><button class="primary" type="button" id="btnSancionarLector" data-solo="ROLE_BIBLIOTECARIA"><i class="ph ph-plus-circle"></i> Nueva sanción para este lector</button><button class="secondary" type="button" id="btnVerSancionesLector">Ver sus sanciones</button></div>
+        </div>
+      </section>
+      <section id="seccionSanciones" role="tabpanel" aria-labelledby="tabSanciones" class="panel-content" hidden>
+        <div class="panel-header"><div><h3>Administración de sanciones</h3><p>Consultá sanciones vigentes e históricas, registrá o levantá una sanción.</p></div><button class="primary" type="button" id="btnNuevaSancion" data-solo="ROLE_BIBLIOTECARIA"><i class="ph ph-plus"></i> Nueva sanción</button></div>
+        <form id="formFiltros" class="filters"><label class="field"><span>Legajo (opcional)</span><input id="filtroLegajo" placeholder="Todos los lectores" maxlength="80"></label><label class="field"><span>Estado</span><select id="filtroEstado"><option value="">Todas</option><option value="true">Solo vigentes</option></select></label><button type="submit" class="secondary"><i class="ph ph-funnel"></i> Filtrar</button><button type="button" class="text-button" id="btnLimpiarFiltros">Limpiar</button></form>
+        <div id="mensajeSanciones" class="empty" role="status">Cargando sanciones…</div>
+        <div class="table-scroll" id="contenedorTabla" hidden><table><thead><tr><th>Lector</th><th>Motivo</th><th>Inicio</th><th>Fin</th><th>Estado</th><th>Acciones</th></tr></thead><tbody id="tablaSanciones"></tbody></table></div>
+        <div class="pagination"><span id="infoPagina"></span><div class="page-buttons"><button class="secondary" type="button" id="paginaAnterior">Anterior</button><button class="secondary" type="button" id="paginaSiguiente">Siguiente</button></div></div>
+      </section>
+    </section>
+  </main>
+</div>
+</div>
+<div class="ui-overlay" id="modalSancion" aria-hidden="true"><div class="ui-modal" role="dialog" aria-modal="true" aria-labelledby="tituloModal"><header><h3 id="tituloModal">Nueva sanción manual</h3><button type="button" data-cerrar aria-label="Cerrar"><i class="ph ph-x"></i></button></header><form id="formSancion"><div class="formfields"><label class="field"><span>Legajo del lector *</span><input id="sancionLegajo" required maxlength="80"></label><label class="field"><span>Duración (días)</span><input id="sancionDias" type="number" min="1" step="1" placeholder="Sin fecha de fin"></label><label class="field wide"><span>Motivo de la sanción *</span><textarea id="sancionMotivo" required rows="3" maxlength="500" placeholder="Describí el motivo de la sanción"></textarea></label><p class="hint wide">Si dejás la duración vacía, la sanción queda sin fecha de fin hasta que se levante manualmente.</p><div id="errorSancion" class="error-message wide" hidden role="alert"></div></div><footer class="modal-actions"><button class="secondary" type="button" data-cerrar>Cancelar</button><button class="primary" type="submit" id="guardarSancion">Registrar sanción</button></footer></form></div></div>
+<script src="../../comun/api.js"></script><script src="lectores-sanciones.js"></script>
+</body></html>

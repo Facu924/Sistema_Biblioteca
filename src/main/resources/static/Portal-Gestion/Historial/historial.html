@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial de Préstamos - Biblioteca CENT 35</title>
+    <!-- Iconos Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="../../comun/ui.css">
+    <link rel="stylesheet" href="historial.css">
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- SIDEBAR COLAPSABLE -->
+        <aside class="sidebar" id="sidebar">
+            <button class="toggle-btn" id="toggleBtn" type="button" title="Alternar menú">
+                <i class="ph ph-caret-left-bold"></i>
+            </button>
+
+            <div>
+                <!-- Brand / Logo -->
+                <div class="brand">
+                    <div class="brand-icon">
+                        <i class="ph ph-books"></i>
+                    </div>
+                    <div class="brand-text">
+                        <h2>Biblioteca</h2>
+                        <span>CENT 35</span>
+                    </div>
+                </div>
+
+                <!-- Menú de Navegación -->
+                <nav class="nav-menu">
+                    <a href="../Dashboard/dashboard.html" class="nav-item">
+                        <i class="ph ph-squares-four"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="../Catalogo-libro/catalogo.html" class="nav-item">
+                        <i class="ph ph-book-open"></i>
+                        <span>Catálogo de Libros</span>
+                    </a>
+                    <a href="../Prestamos/prestamo.html" class="nav-item">
+                        <i class="ph ph-files"></i>
+                        <span>Préstamos</span>
+                    </a>
+                    <a href="historial.html" class="nav-item active">
+                        <i class="ph ph-clock-counter-clockwise"></i>
+                        <span>Historial</span>
+                    </a>
+                    <a href="../Lectores-Sanciones/lectores-sanciones.html" class="nav-item">
+                        <i class="ph ph-users-three"></i>
+                        <span>Lectores y Sanciones</span>
+                    </a>
+                    <a href="#" class="nav-item" data-solo="ROLE_ADMIN">
+                        <i class="ph ph-users-three"></i>
+                        <span>Usuarios</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <i class="ph ph-user-circle"></i>
+                        <span>Mi Perfil</span>
+                    </a>
+                </nav>
+            </div>
+
+            <!-- Footer / Cerrar Sesión -->
+            <div class="sidebar-footer">
+                <a href="../../Login/login.html" class="logout-btn">
+                    <i class="ph ph-sign-out"></i>
+                    <span>Cerrar Sesión</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- ÁREA PRINCIPAL -->
+        <div class="main-content">
+            <!-- NAVBAR SUPERIOR -->
+            <header class="navbar">
+                <h1 class="page-title">Historial de Préstamos</h1>
+                
+                <div class="navbar-right">
+                    <div class="search-box nav-search">
+                        <i class="ph ph-magnifying-glass search-icon"></i>
+                        <input type="search" id="buscarHistorial" placeholder="Buscar lector, libro, legajo..." aria-label="Buscar movimientos">
+                    </div>
+                    
+                    <button class="notif-btn" type="button">
+                        <i class="ph ph-bell"></i>
+                        <span class="badge" id="badgeMora" hidden>0</span>
+                    </button>
+                    
+                    <div class="user-profile">
+                        <div class="avatar">M</div>
+                        <div class="user-details">
+                            <span class="user-name">María López</span>
+                            <span class="user-role">Bibliotecario</span>
+                        </div>
+                        <i class="ph ph-caret-down drop-icon"></i>
+                    </div>
+                </div>
+            </header>
+
+            <!-- CONTENIDO PRINCIPAL -->
+            <main class="dashboard-body">
+                <!-- ENCABEZADO DE SECCIÓN -->
+                <div class="section-header">
+                    <div>
+                        <h2>Historial de Préstamos</h2>
+                        <span class="subtitle">Registro completo de movimientos de la biblioteca</span>
+                    </div>
+                </div>
+
+                <!-- TARJETAS DE MÉTRICAS (KPIs) -->
+                <div class="kpi-history-grid">
+                    <div class="kpi-history-card">
+                        <div class="kpi-top-label">
+                            <i class="ph ph-clock"></i> Total movimientos
+                        </div>
+                        <span class="kpi-num" id="kpiTotal">—</span>
+                    </div>
+                    <div class="kpi-history-card">
+                        <div class="kpi-top-label">
+                            <i class="ph ph-book"></i> Préstamos
+                        </div>
+                        <span class="kpi-num blue" id="kpiPrestamos">—</span>
+                    </div>
+                    <div class="kpi-history-card">
+                        <div class="kpi-top-label">
+                            <i class="ph ph-check-circle"></i> Devoluciones
+                        </div>
+                        <span class="kpi-num green" id="kpiDevoluciones">—</span>
+                    </div>
+                    <div class="kpi-history-card">
+                        <div class="kpi-top-label">
+                            <i class="ph ph-warning-circle"></i> Vencidos
+                        </div>
+                        <span class="kpi-num red" id="kpiVencidos">—</span>
+                    </div>
+                </div>
+
+                <!-- LÍNEA DE TIEMPO (TIMELINE) -->
+                <div class="timeline-container">
+                    <div class="timeline-header">
+                        <h3>Línea de Tiempo</h3>
+                        <span class="events-count" id="conteoEventos">Cargando...</span>
+                    </div>
+
+                    <div class="historial-controles" aria-label="Filtrar historial">
+                        <div class="historial-filtros" id="filtrosHistorial">
+                            <button type="button" class="historial-filtro seleccionado" data-tipo="TODOS">Todos</button>
+                            <button type="button" class="historial-filtro" data-tipo="PRESTAMO">Préstamos</button>
+                            <button type="button" class="historial-filtro" data-tipo="DEVOLUCION">Devoluciones</button>
+                            <button type="button" class="historial-filtro" data-tipo="VENCIDO">Vencidos</button>
+                        </div>
+                        <button type="button" class="historial-actualizar" id="actualizarHistorial"><i class="ph ph-arrows-clockwise"></i> Actualizar</button>
+                    </div>
+                    <div class="timeline-list" id="listaHistorial" aria-live="polite">
+                        <p class="historial-mensaje">Cargando movimientos...</p>
+                    </div>
+                    <div class="historial-paginacion" id="paginacionHistorial"></div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- SCRIPT INTERACTIVO -->
+    <script src="../../comun/api.js"></script>
+    <script src="historial.js"></script>
+</body>
+</html>
